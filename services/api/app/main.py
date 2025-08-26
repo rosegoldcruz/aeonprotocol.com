@@ -6,6 +6,7 @@ from .config import settings
 from .routers import media, webhooks
 from .routers import web_enhance as web_enhance_router
 from .routers import webgen as webgen_router
+from .routers import jobs as jobs_router
 import os, hashlib, logging
 from redis.asyncio import from_url as redis_from_url
 from fastapi_limiter import FastAPILimiter
@@ -37,7 +38,7 @@ async def init_limiter():
 
 @app.on_event("startup")
 async def validate_env():
-    required = ["DATABASE_URL", "OPENAI_API_KEY"]
+    required = ["DATABASE_URL"]
     missing = [k for k in required if not os.getenv(k)]
     if missing:
         log.error(f"Missing required environment variables: {missing}")
@@ -63,4 +64,5 @@ app.include_router(media.router, prefix="/v1/media")
 app.include_router(webhooks.router, prefix="/v1/webhooks")
 app.include_router(web_enhance_router.router)
 app.include_router(webgen_router.router)
+app.include_router(jobs_router.router)
 
