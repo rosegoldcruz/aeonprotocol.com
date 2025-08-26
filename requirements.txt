@@ -16,6 +16,7 @@ psycopg[binary]>=3.2
 # Redis & Caching
 redis==5.0.1
 hiredis==2.2.3
+fastapi-limiter==0.1.6
 
 # Background Tasks
 celery==5.3.4

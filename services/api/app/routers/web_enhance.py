@@ -51,7 +51,7 @@ async def enhance_webspec(req: EnhanceReq, db=Depends(get_db), user=Depends(veri
     await db.execute(
         text("""
         INSERT INTO web_enhancements (id, user_id, raw, webspec_json, created_at)
-        VALUES (:id, :uid, :raw, cast(:spec as jsonb), :ts)
+        VALUES (:id, :uid, :raw, :spec::jsonb, :ts)
         """),
         {"id": enh_id, "uid": uid, "raw": req.raw, "spec": json.dumps(out), "ts": datetime.now(timezone.utc)},
     )

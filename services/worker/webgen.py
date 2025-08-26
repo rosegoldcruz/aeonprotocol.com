@@ -1,5 +1,8 @@
 import os, json, tempfile, zipfile, boto3, requests
 from pathlib import Path
+from tenacity import retry, wait_exponential_jitter, stop_after_attempt, retry_if_exception_type
+from botocore.exceptions import BotoCoreError, ClientError
+from requests import RequestException
 
 VERCEL_DEPLOY_HOOK = os.getenv("VERCEL_DEPLOY_HOOK_URL")
 
@@ -23,6 +26,8 @@ def zip_dir(src: Path, out_zip: Path):
       if path.is_file():
         z.write(path, path.relative_to(src))
 
+@retry(wait=wait_exponential_jitter(initial=1, max=8), stop=stop_after_attempt(5), reraise=True,
+       retry=retry_if_exception_type((BotoCoreError, ClientError)))
 def s3_upload(local_path: Path) -> str:
   s3 = boto3.client("s3", region_name=os.getenv("AWS_REGION"))
   bucket = os.getenv("S3_BUCKET")
@@ -30,6 +35,8 @@ def s3_upload(local_path: Path) -> str:
   s3.upload_file(str(local_path), bucket, key, ExtraArgs={"ContentType": "application/zip"})
   return f"s3://{bucket}/{key}"
 
+@retry(wait=wait_exponential_jitter(initial=1, max=8), stop=stop_after_attempt(5), reraise=True,
+       retry=retry_if_exception_type(RequestException))
 def vercel_deploy(zip_url: str) -> str:
   if not VERCEL_DEPLOY_HOOK:
     return ""

@@ -53,3 +53,18 @@ async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_d
 
     return {"project_id": project_id, "status": "queued"}
 
+
+@router.get("/projects/{project_id}")
+async def get_project(project_id: str, db=Depends(get_db), user=Depends(verify_bearer)):
+    res = await db.execute(text("""
+        select id, user_id, status, artifact_url, preview_url, deploy_log, created_at, updated_at
+        from web_projects where id=:id
+    """), {"id": project_id})
+    row = res.mappings().first()
+    if not row:
+        raise HTTPException(404, "project not found")
+    uid = (user or {}).get("sub") or (user or {}).get("user_id") or (user or {}).get("id")
+    if str(row["user_id"]) != str(uid):
+        raise HTTPException(403, "forbidden")
+    return dict(row)
+
