@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
+import React from "react";
 
-export default function VoicePrompt() {
+const VoicePrompt: React.FC = () => {
   const [text, setText] = useState("");
   const [enh, setEnh] = useState<any>(null);
   const [enhId, setEnhId] = useState<string | null>(null);
@@ -59,5 +60,6 @@ export default function VoicePrompt() {
       {enh && <pre className="text-xs p-3 rounded border overflow-auto bg-neutral-900">{JSON.stringify(enh, null, 2)}</pre>}
     </div>
   );
-}
+};
 
+export default VoicePrompt;
