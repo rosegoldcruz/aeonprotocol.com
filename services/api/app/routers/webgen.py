@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import text
 from ..database.neon_db import get_db
-from ..auth import verify_bearer as authed_user
+from ..auth import verify_bearer
 import uuid, json, os
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -18,7 +18,7 @@ else:
 router = APIRouter(prefix="/v1/webgen", tags=["webgen"])
 
 @router.post("/commit")
-async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_db), user=Depends(authed_user)):
+async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_db), user=Depends(verify_bearer)):
     res = await db.execute(text("select id, user_id, webspec_json from web_enhancements where id=:id"), {"id": enhancement_id})
     row = res.mappings().first()
     if not row:
@@ -29,7 +29,7 @@ async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_d
         text(
             """
             insert into web_projects (id, user_id, webspec_json, status, created_at)
-            values (:id, :uid, cast(:spec as jsonb), 'queued', :ts)
+            values (:id, :uid, :spec::jsonb, 'queued', :ts)
             """
         ),
         {"id": project_id, "uid": row["user_id"], "spec": json.dumps(row["webspec_json"]) if isinstance(row["webspec_json"], dict) else row["webspec_json"], "ts": datetime.now(timezone.utc)},

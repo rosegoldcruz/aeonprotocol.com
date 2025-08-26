@@ -6,7 +6,7 @@ import uuid, json
 from sqlalchemy import text
 
 from ..database.neon_db import get_db
-from ..auth import verify_bearer as authed_user
+from ..auth import verify_bearer
 
 router = APIRouter(prefix="/v1/enhance", tags=["webspec"])
 
@@ -42,18 +42,18 @@ async def llm_complete_json(_: dict) -> dict:
     }
 
 @router.post("/webspec")
-async def enhance_webspec(req: EnhanceReq, db=Depends(get_db), user=Depends(authed_user)):
+async def enhance_webspec(req: EnhanceReq, db=Depends(get_db), user=Depends(verify_bearer)):
     out = await llm_complete_json({"system": SYSTEM, "input": {"prompt": req.raw, "session": req.session_context or {}}})
     enh_id = str(uuid.uuid4())
-    user_id = (user or {}).get("sub") if isinstance(user, dict) else None
-    if not user_id:
+    uid = (user or {}).get("sub") or (user or {}).get("user_id") or (user or {}).get("id")
+    if not uid:
         raise HTTPException(status_code=401, detail="user not authenticated")
     await db.execute(
         text("""
         INSERT INTO web_enhancements (id, user_id, raw, webspec_json, created_at)
         VALUES (:id, :uid, :raw, cast(:spec as jsonb), :ts)
         """),
-        {"id": enh_id, "uid": user_id, "raw": req.raw, "spec": json.dumps(out), "ts": datetime.now(timezone.utc)},
+        {"id": enh_id, "uid": uid, "raw": req.raw, "spec": json.dumps(out), "ts": datetime.now(timezone.utc)},
     )
     await db.commit()
     return {"enhancement_id": enh_id, "webspec": out}
