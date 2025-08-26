@@ -3,7 +3,7 @@ from sqlalchemy import text
 from ..database.neon_db import get_db
 from ..auth import verify_bearer as authed_user
 import uuid, json, os
-from datetime import datetime
+from datetime import datetime, timezone
 from urllib.parse import urlparse
 import redis as redis_lib
 
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/v1/webgen", tags=["webgen"])
 
 @router.post("/commit")
 async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_db), user=Depends(authed_user)):
-    res = await db.execute(text("select id, webspec_json from web_enhancements where id=:id"), {"id": enhancement_id})
+    res = await db.execute(text("select id, user_id, webspec_json from web_enhancements where id=:id"), {"id": enhancement_id})
     row = res.mappings().first()
     if not row:
         raise HTTPException(404, "enhancement not found")
@@ -29,15 +29,15 @@ async def commit(enhancement_id: str, auto_deploy: bool = True, db=Depends(get_d
         text(
             """
             insert into web_projects (id, user_id, webspec_json, status, created_at)
-            values (:id, :uid, cast(:spec as jsonb), 'queued', now())
+            values (:id, :uid, cast(:spec as jsonb), 'queued', :ts)
             """
         ),
-        {"id": project_id, "uid": row.get("user_id", project_id), "spec": json.dumps(row["webspec_json"]) if isinstance(row["webspec_json"], dict) else row["webspec_json"]},
+        {"id": project_id, "uid": row["user_id"], "spec": json.dumps(row["webspec_json"]) if isinstance(row["webspec_json"], dict) else row["webspec_json"], "ts": datetime.now(timezone.utc)},
     )
 
     await db.execute(
-        text("update web_enhancements set committed_at=now(), project_id=:pid where id=:id"),
-        {"pid": project_id, "id": enhancement_id},
+        text("update web_enhancements set committed_at=:ts, project_id=:pid where id=:id"),
+        {"pid": project_id, "id": enhancement_id, "ts": datetime.now(timezone.utc)},
     )
     await db.commit()
 

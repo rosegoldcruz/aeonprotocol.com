@@ -11,6 +11,7 @@ sqlalchemy==2.0.23
 asyncpg==0.29.0
 alembic==1.13.1
 psycopg2-binary==2.9.9
+psycopg[binary]>=3.2
 
 # Redis & Caching
 redis==5.0.1
@@ -113,3 +114,6 @@ graphviz==0.20.1
 # Additional AI Services (optional)
 elevenlabs==0.2.26
 stability-sdk==0.8.4
+
+# Reliability
+tenacity==9.0.0

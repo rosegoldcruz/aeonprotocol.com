@@ -1,10 +1,6 @@
 import os, redis, json, traceback
 from webgen import handle_job
-
-# Placeholder DB updater: logs only; integrate with real DB helper if available
-
-def update_project(project_id: str, **fields):
-    print("update_project", project_id, fields)
+from db import update_project
 
 r = redis.Redis(host=os.getenv("REDIS_HOST","redis"), port=int(os.getenv("REDIS_PORT","6379")), db=0)
 
