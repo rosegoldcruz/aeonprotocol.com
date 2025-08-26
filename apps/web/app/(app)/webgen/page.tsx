@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-const VoicePrompt = dynamic(() => import("./VoicePrompt.tsx"), { ssr: false });
+const VoicePrompt = dynamic(() => import("./VoicePrompt"), { ssr: false });
 
 export default function Page(){
   return (
