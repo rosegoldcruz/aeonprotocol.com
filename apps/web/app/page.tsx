@@ -45,17 +45,14 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-4xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-white">AEON</span>
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-              The Future of Video Creation
-            </span>
+            The Complete
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500"> AI Stack</span>
+            <br />for Enterprise
           </h1>
 
           <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Transform your ideas into viral videos with AI. Create, edit, and publish
-            professional content in minutes, not hours. Join thousands of creators
-            revolutionizing their workflow.
+            AEON is the unified AI business automation platform that replaces your entire tech stack.
+            Generate media, automate workflows, and scale your business with intelligent AI agents.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
@@ -65,7 +62,7 @@ export default function HomePage() {
               asChild
             >
               <Link href="/sign-up" className="inline-flex items-center">
-                Start Creating Now
+                Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -100,56 +97,62 @@ export default function HomePage() {
               <span className="text-purple-400">Revolutionary</span> AI Architecture
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Cutting-edge AI models working in harmony to bring your creative vision to life
+              Replace your entire tech stack with AEON's unified AI ecosystem
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="bg-gray-900/50 border-gray-800 hover:border-cyan-500/50 transition-all duration-300 group">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Video className="h-8 w-8 text-white" />
+              <CardHeader>
+                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <ImageIcon className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg">AI Video</CardTitle>
-                <CardDescription className="text-gray-400 text-sm">
-                  Next-gen video synthesis powered by advanced neural networks
+                <CardTitle className="text-white text-xl">Advanced Media Studio</CardTitle>
+                <CardDescription className="text-gray-300 text-base">
+                  Generate images, videos, and audio with cutting-edge AI models
                 </CardDescription>
+                <div className="mt-4 text-gray-400 space-y-2">
+                  <div>• FLUX, DALL-E, Ideogram integration</div>
+                  <div>• Runway, Pika, Luma video generation</div>
+                  <div>• ElevenLabs voice synthesis</div>
+                  <div>• Batch processing & custom models</div>
+                </div>
               </CardHeader>
             </Card>
 
             <Card className="bg-gray-900/50 border-gray-800 hover:border-purple-500/50 transition-all duration-300 group">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Mic className="h-8 w-8 text-white" />
+              <CardHeader>
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Zap className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg">Voice AI</CardTitle>
-                <CardDescription className="text-gray-400 text-sm">
-                  Human-like voice synthesis with emotional intelligence
+                <CardTitle className="text-white text-xl">Intelligent AI Agents</CardTitle>
+                <CardDescription className="text-gray-300 text-base">
+                  Intelligent agents for content creation and business automation
                 </CardDescription>
+                <div className="mt-4 text-gray-400 space-y-2">
+                  <div>• Screenwriter & Video Editor agents</div>
+                  <div>• Sales & Customer Service automation</div>
+                  <div>• Marketing & Analytics insights</div>
+                  <div>• SEO & Content optimization</div>
+                </div>
               </CardHeader>
             </Card>
 
             <Card className="bg-gray-900/50 border-gray-800 hover:border-green-500/50 transition-all duration-300 group">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <ImageIcon className="h-8 w-8 text-white" />
+              <CardHeader>
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Users className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-white text-lg">Image AI</CardTitle>
-                <CardDescription className="text-gray-400 text-sm">
-                  Photorealistic image generation and intelligent editing
+                <CardTitle className="text-white text-xl">Enterprise Integration</CardTitle>
+                <CardDescription className="text-gray-300 text-base">
+                  Seamless integration with your existing business tools
                 </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-gray-900/50 border-gray-800 hover:border-orange-500/50 transition-all duration-300 group">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Zap className="h-8 w-8 text-white" />
+                <div className="mt-4 text-gray-400 space-y-2">
+                  <div>• CRM integration (HubSpot, Salesforce)</div>
+                  <div>• E-commerce (Shopify, WooCommerce)</div>
+                  <div>• ERP & workflow automation</div>
+                  <div>• Custom API connections</div>
                 </div>
-                <CardTitle className="text-white text-lg">Smart AI</CardTitle>
-                <CardDescription className="text-gray-400 text-sm">
-                  Intelligent automation that learns from your preferences
-                </CardDescription>
               </CardHeader>
             </Card>
           </div>
@@ -162,18 +165,18 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
               <div className="text-4xl font-bold text-cyan-400 mb-2">10x</div>
-              <div className="text-lg text-white mb-2">Faster Creation</div>
-              <div className="text-sm text-gray-400">Average time saved per video project</div>
+              <div className="text-lg text-white mb-2">Faster Automation</div>
+              <div className="text-sm text-gray-400">Average time saved per business process</div>
             </div>
             <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <div className="text-4xl font-bold text-purple-400 mb-2">5★</div>
-              <div className="text-lg text-white mb-2">User Rating</div>
-              <div className="text-sm text-gray-400">Based on 10,000+ creator reviews</div>
+              <div className="text-4xl font-bold text-purple-400 mb-2">99%</div>
+              <div className="text-lg text-white mb-2">Uptime</div>
+              <div className="text-sm text-gray-400">Enterprise-grade reliability</div>
             </div>
             <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <div className="text-4xl font-bold text-green-400 mb-2">3min</div>
-              <div className="text-lg text-white mb-2">Average Edit Time</div>
-              <div className="text-sm text-gray-400">From concept to published video</div>
+              <div className="text-4xl font-bold text-green-400 mb-2">$50K+</div>
+              <div className="text-lg text-white mb-2">Average Savings</div>
+              <div className="text-sm text-gray-400">Annual cost reduction per enterprise</div>
             </div>
           </div>
         </div>
@@ -184,10 +187,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Why Creators Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">AEON</span>
+              Why Enterprises Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">AEON</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Join thousands of creators who've transformed their content workflow
+              Join thousands of businesses who've transformed their operations with AI
             </p>
           </div>
 
@@ -199,7 +202,7 @@ export default function HomePage() {
                 </div>
                 <CardTitle className="text-white text-xl">Lightning Fast</CardTitle>
                 <CardDescription className="text-gray-300 text-base">
-                  Create professional videos in minutes, not hours. Our AI handles the heavy lifting.
+                  Automate complex business processes in minutes, not months. Our AI handles the heavy lifting.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -209,9 +212,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-4">
                   <Star className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl">Studio Quality</CardTitle>
+                <CardTitle className="text-white text-xl">Enterprise Quality</CardTitle>
                 <CardDescription className="text-gray-300 text-base">
-                  Professional-grade output that rivals expensive production studios.
+                  Professional-grade AI solutions that rival expensive enterprise software.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -221,9 +224,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-4">
                   <Users className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-white text-xl">Collaborative</CardTitle>
+                <CardTitle className="text-white text-xl">Scalable</CardTitle>
                 <CardDescription className="text-gray-300 text-base">
-                  Work seamlessly with your team. Share, review, and iterate in real-time.
+                  Scale from startup to enterprise. Our platform grows with your business needs.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -238,7 +241,7 @@ export default function HomePage() {
             See <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">AEON</span> in Action
           </h2>
           <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-            Watch how creators are using AEON to transform their content workflow
+            Watch how enterprises are using AEON to transform their business operations
           </p>
 
           <div className="relative max-w-4xl mx-auto">
@@ -260,9 +263,9 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Loved by <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Creators</span>
+              Loved by <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Enterprises</span>
             </h2>
-            <p className="text-xl text-gray-300">See what our community is saying</p>
+            <p className="text-xl text-gray-300">See what our clients are saying</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -272,11 +275,11 @@ export default function HomePage() {
                   <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"></div>
                   <div>
                     <div className="font-semibold text-white">Sarah Chen</div>
-                    <div className="text-sm text-gray-400">Content Creator</div>
+                    <div className="text-sm text-gray-400">CTO, TechCorp</div>
                   </div>
                 </div>
                 <CardDescription className="text-gray-300 text-base">
-                  "AEON completely transformed my workflow. What used to take me days now takes minutes. The AI is incredibly intuitive."
+                  "AEON completely transformed our operations. What used to take our team weeks now takes minutes. The AI automation is incredibly powerful."
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -287,11 +290,11 @@ export default function HomePage() {
                   <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full"></div>
                   <div>
                     <div className="font-semibold text-white">Marcus Johnson</div>
-                    <div className="text-sm text-gray-400">YouTuber</div>
+                    <div className="text-sm text-gray-400">CEO, InnovateCorp</div>
                   </div>
                 </div>
                 <CardDescription className="text-gray-300 text-base">
-                  "The quality is unmatched. My subscribers can't believe I'm creating this content so quickly. AEON is a game-changer."
+                  "The ROI is unmatched. Our clients can't believe we're delivering results this quickly. AEON is a game-changer for our business."
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -302,11 +305,11 @@ export default function HomePage() {
                   <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full"></div>
                   <div>
                     <div className="font-semibold text-white">Emma Rodriguez</div>
-                    <div className="text-sm text-gray-400">Marketing Director</div>
+                    <div className="text-sm text-gray-400">VP Operations, GlobalTech</div>
                   </div>
                 </div>
                 <CardDescription className="text-gray-300 text-base">
-                  "Our marketing team's productivity has skyrocketed. We're creating more content than ever with half the resources."
+                  "Our entire organization's productivity has skyrocketed. We're processing more data and automating more workflows than ever with half the resources."
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -318,10 +321,10 @@ export default function HomePage() {
       <section className="px-4 py-20 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-6xl font-bold mb-6">
-            Ready to Go <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Viral?</span>
+            Ready to Go <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Enterprise?</span>
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join the AI video revolution. Create stunning content that captivates your audience and grows your brand.
+            Join the AI automation revolution. Transform your business operations and scale with intelligent AI agents.
           </p>
 
           <Button
@@ -330,7 +333,7 @@ export default function HomePage() {
             asChild
           >
             <Link href="/sign-up" className="inline-flex items-center">
-              Start Creating Now
+              Start Free Trial
               <ArrowRight className="ml-2 h-6 w-6" />
             </Link>
           </Button>
