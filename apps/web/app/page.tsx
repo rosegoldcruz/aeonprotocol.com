@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Play, Star, Users, Zap, CheckCircle, Video, Mic, Image as ImageIcon } from "lucide-react"
+import { ArrowRight, Play, Star, Users, Zap, CheckCircle, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
 
 // Force static generation to avoid API dependency issues
