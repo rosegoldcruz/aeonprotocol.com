@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 from starlette.responses import Response
-import os
 from .config import settings
 from .routers import media, webhooks
+from .routers import web_enhance as web_enhance_router
+from .routers import webgen as webgen_router
 
 app = FastAPI(title="AEON API")
 
@@ -38,4 +39,6 @@ def metrics():
 # Routers
 app.include_router(media.router, prefix="/v1/media")
 app.include_router(webhooks.router, prefix="/v1/webhooks")
+app.include_router(web_enhance_router.router)
+app.include_router(webgen_router.router)
 

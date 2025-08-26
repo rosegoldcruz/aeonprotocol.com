@@ -20,6 +20,10 @@ coverage/
 .env.production*
 .env.test*
 .env.example*
+.env.api*
+.env.development.local
+.env.web
+.env.worker
 
 # OS
 .DS_Store

@@ -1,0 +1,45 @@
+{
+  "site_type": "storefront|marketing|saas",
+  "brand": {
+    "name": "",
+    "tagline": "",
+    "logo_url": "",
+    "palette": ["#111", "#7c3aed", "#06b6d4"]
+  },
+  "theme": { "font_primary": "Inter", "rounded": "xl", "dark_mode": true },
+  "domain": null,
+  "features": {
+    "auth": true,
+    "blog": false,
+    "pricing": true,
+    "cms": "local|mdx|supabase",
+    "analytics": "posthog"
+  },
+  "ecommerce": {
+    "enabled": true,
+    "provider": "stripe",
+    "currency": "USD",
+    "products": [
+      { "sku": "starter", "name": "Starter Kit", "price": 4900, "description": "..." }
+    ]
+  },
+  "pages": [
+    {
+      "path": "/",
+      "sections": [
+        { "type": "hero", "h1": "…", "sub": "…", "cta": { "label": "Get started", "href": "/signup" } },
+        { "type": "features", "items": [ { "title": "…", "desc": "…" }, { "title": "…", "desc": "…" } ] },
+        { "type": "cta", "h2": "…" }
+      ]
+    },
+    {
+      "path": "/pricing",
+      "sections": [ { "type": "pricing", "plans": [ { "id": "pro", "price": 2900, "interval": "mo" } ] } ]
+    }
+  ],
+  "integrations": { "clerk": true, "supabase": true, "stripe": true },
+  "routing": { "basePath": "/" },
+  "seo": { "title": "", "description": "", "og_image_url": "" },
+  "scaffold": { "package_manager": "pnpm", "app_dir": true, "shadcn": true }
+}
+
