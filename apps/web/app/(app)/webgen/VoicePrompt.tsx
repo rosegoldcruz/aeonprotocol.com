@@ -30,7 +30,7 @@ export default function VoicePrompt() {
   function stop(){ recRef.current?.stop(); }
 
   async function enhance() {
-    const base = process.env.NEXT_PUBLIC_API_URL || "";
+    const base = (process.env['NEXT_PUBLIC_API_URL'] as string) || "";
     const res = await fetch(`${base}/v1/enhance/webspec`, {
       method:"POST", headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ raw: text })
@@ -41,7 +41,7 @@ export default function VoicePrompt() {
 
   async function commit() {
     if (!enhId) return;
-    const base = process.env.NEXT_PUBLIC_API_URL || "";
+    const base = (process.env['NEXT_PUBLIC_API_URL'] as string) || "";
     const res = await fetch(`${base}/v1/webgen/commit?enhancement_id=${enhId}`, { method:"POST" });
     const data = await res.json();
     alert(`Queued project ${data.project_id}`);
