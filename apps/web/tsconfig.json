@@ -3,8 +3,8 @@
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "preserve",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "checkJs": true,
     "resolveJsonModule": true,
