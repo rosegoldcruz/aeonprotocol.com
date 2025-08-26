@@ -5,13 +5,27 @@ export default function VoicePrompt() {
   const [text, setText] = useState("");
   const [enh, setEnh] = useState<any>(null);
   const [enhId, setEnhId] = useState<string | null>(null);
-  const recRef = useRef<SpeechRecognition|null>(null);
+  const recRef = useRef<any>(null);
 
   function start() {
-    const SR: any = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const r = new SR(); r.continuous = true; r.interimResults = true; r.lang = "en-US";
-    r.onresult = (e:any) => { let t=""; for (let i=e.resultIndex;i<e.results.length;i++) t += e.results[i][0].transcript; setText(t); };
-    r.start(); recRef.current = r;
+    const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if (!SR) {
+      console.warn("Speech recognition not supported");
+      return;
+    }
+    const r = new SR();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = "en-US";
+    r.onresult = (e: any) => {
+      let t = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        t += e.results[i][0].transcript;
+      }
+      setText(t);
+    };
+    r.start();
+    recRef.current = r;
   }
   function stop(){ recRef.current?.stop(); }
 
