@@ -1,0 +1,209 @@
+name: ci-cd
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+      - run: pytest services/api/tests -q
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci --prefix apps/web
+      - run: npm run build --prefix apps/web
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_PREFIX: ghcr.io/${{ github.repository }}
+      SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build & push API
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deployment/Dockerfile.api
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-api:${{ env.SHA }}
+            ${{ env.IMAGE_PREFIX }}-api:latest
+      - name: Build & push Worker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deployment/Dockerfile.worker
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-worker:${{ env.SHA }}
+            ${{ env.IMAGE_PREFIX }}-worker:latest
+      - name: Build & push Web
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-web:${{ env.SHA }}
+            ${{ env.IMAGE_PREFIX }}-web:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            sudo mkdir -p /srv/stack/deployment/backup
+            cd /srv/stack
+
+            # Write compose with GHCR images
+            cat > deployment/docker-compose.production.yml <<'EOF'
+            services:
+              postgres:
+                image: postgres:16
+                environment:
+                  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                volumes:
+                  - pgdata:/var/lib/postgresql/data
+                healthcheck:
+                  test: ["CMD-SHELL", "pg_isready -U postgres"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 5
+
+              redis:
+                image: redis:7
+                healthcheck:
+                  test: ["CMD", "redis-cli", "ping"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 5
+
+              api:
+                image: ${IMAGE_REGISTRY}-api:latest
+                env_file:
+                  - ./.env
+                depends_on:
+                  postgres:
+                    condition: service_healthy
+                  redis:
+                    condition: service_healthy
+                healthcheck:
+                  test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+                  interval: 15s
+                  timeout: 5s
+                  retries: 5
+
+              worker:
+                image: ${IMAGE_REGISTRY}-worker:latest
+                env_file:
+                  - ./.env
+                depends_on:
+                  postgres:
+                    condition: service_healthy
+                  redis:
+                    condition: service_healthy
+
+              web:
+                image: ${IMAGE_REGISTRY}-web:latest
+                env_file:
+                  - ./.env
+                depends_on:
+                  api:
+                    condition: service_healthy
+                healthcheck:
+                  test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+                  interval: 15s
+                  timeout: 5s
+                  retries: 5
+
+              nginx:
+                image: nginx:1.25-alpine
+                volumes:
+                  - ./deployment/nginx.conf:/etc/nginx/nginx.conf:ro
+                ports:
+                  - "80:80"
+                depends_on:
+                  web:
+                    condition: service_started
+                  api:
+                    condition: service_healthy
+
+              db-cron:
+                image: alpine:3.20
+                volumes:
+                  - ./deployment/backup:/backup-scripts
+                  - backup_data:/backup
+                env_file:
+                  - ./.env
+                entrypoint: /bin/sh -c 'apk add --no-cache postgresql15-client aws-cli && echo "0 3 * * * /backup-scripts/db_backup.sh" > /etc/crontabs/root && crond -f -L /dev/stdout'
+                depends_on:
+                  postgres:
+                    condition: service_healthy
+
+            volumes:
+              pgdata:
+              backup_data:
+            EOF
+
+            # Write deploy script and make executable
+            cat > deployment/deploy.sh <<'EOS'
+            #!/usr/bin/env bash
+            set -euo pipefail
+
+            COMPOSE=deployment/docker-compose.production.yml
+
+            echo "[deploy] pulling images…"
+            docker compose -f "$COMPOSE" pull
+
+            echo "[deploy] applying migrations…"
+            # api entrypoint already runs alembic; we only need to restart to pick new image
+
+            echo "[deploy] restarting stack…"
+            docker compose -f "$COMPOSE" up -d --remove-orphans
+
+            echo "[deploy] pruning old images…"
+            docker image prune -f
+
+            echo "[deploy] health check…"
+            set +e
+            for i in {1..30}; do
+              if curl -fsS http://localhost/api/health >/dev/null; then
+                echo "[deploy] API healthy"
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "[deploy] API failed health after rollout"
+            docker compose -f "$COMPOSE" logs --no-color api | tail -n 200
+            exit 1
+            EOS
+            chmod +x deployment/deploy.sh
+
+            # Run deploy
+            ./deployment/deploy.sh 

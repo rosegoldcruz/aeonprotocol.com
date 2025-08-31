@@ -5,37 +5,57 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
-    build:
-      context: .
-      dockerfile: deployment/Dockerfile.api
+    image: ${IMAGE_REGISTRY}-api:latest
     env_file:
-      - .env.api
+      - ./.env
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   worker:
-    build:
-      context: .
-      dockerfile: deployment/Dockerfile.worker
+    image: ${IMAGE_REGISTRY}-worker:latest
     env_file:
-      - .env.worker
+      - ./.env
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
+    image: ${IMAGE_REGISTRY}-web:latest
     env_file:
-      - .env.web
+      - ./.env
     depends_on:
-      - api
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   nginx:
     image: nginx:1.25-alpine
@@ -44,8 +64,32 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - web
+      web:
+        condition: service_started
+      api:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./deployment/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
       - api
+
+  db-cron:
+    image: alpine:3.20
+    volumes:
+      - ./deployment/backup:/backup-scripts
+      - backup_data:/backup
+    env_file:
+      - ./.env
+    entrypoint: /bin/sh -c 'apk add --no-cache postgresql15-client aws-cli && echo "0 3 * * * /backup-scripts/db_backup.sh" > /etc/crontabs/root && crond -f -L /dev/stdout'
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   pgdata:
+  backup_data:
