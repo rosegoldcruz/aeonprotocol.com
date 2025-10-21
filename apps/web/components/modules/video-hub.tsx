@@ -25,6 +25,10 @@ interface VideoHubProps {
 	isGenerating: boolean
 }
 
+	type JobAsset = { id?: number; url?: string | null; presigned_url?: string | null; mime_type?: string; width?: number; height?: number; duration?: number }
+	type JobResp = { status: string; error_message?: string; assets: JobAsset[] }
+
+
 export function VideoHub({ isGenerating: _isGenerating }: VideoHubProps) {
 	const [prompt, setPrompt] = useState("")
 	const [provider, setProvider] = useState("runway")
@@ -80,12 +84,12 @@ export function VideoHub({ isGenerating: _isGenerating }: VideoHubProps) {
 		const interval = setInterval(async () => {
 			try {
 				const token = await getToken(); if (!token) return
-				const data = await apiRequest(`/v1/media/jobs/${jobId}`, {}, token)
+				const data = await apiRequest(`/v1/media/jobs/${jobId}`, {}, token) as JobResp
 				if (!mounted) return
 				setStatus(data.status)
 				if (data.error_message) setError(data.error_message)
 				if (data.status === "completed" && data.assets?.length) {
-					const asset = data.assets.find(a => a.url)
+					const asset = data.assets.find((a: JobAsset) => a.url)
 					if (asset?.url) setVideoUrl(asset.url as string)
 					setLoading(false)
 					clearInterval(interval)
