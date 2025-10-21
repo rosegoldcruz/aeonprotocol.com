@@ -9,7 +9,8 @@ import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, Film, Play, Sparkles, Scissors, Camera, Mic, Wand2 } from "lucide-react"
-import { createJob, getJob } from "@/lib/api"
+import { useAuth } from "@clerk/nextjs"
+import { apiRequest } from "@/lib/utils"
 
 interface LibraryItem {
 	id: number
@@ -32,6 +33,7 @@ export function VideoHub({ isGenerating: _isGenerating }: VideoHubProps) {
 	const [fps, setFps] = useState([24])
 	const [seed] = useState("")
 
+	const { getToken } = useAuth()
 	const [jobId, setJobId] = useState<number | null>(null)
 	const [videoUrl, setVideoUrl] = useState<string | null>(null)
 	const [status, setStatus] = useState<string | null>(null)
@@ -61,8 +63,10 @@ export function VideoHub({ isGenerating: _isGenerating }: VideoHubProps) {
 
 		try {
 			const payload = { prompt: prompt.trim(), duration: duration[0], resolution, fps: fps[0], seed: seed || undefined }
-			const { job_id } = await createJob({ kind: "video", provider, payload })
-			setJobId(job_id)
+			const token = await getToken(); if (!token) throw new Error("Not authenticated")
+			const res = await apiRequest("/v1/media/jobs", { method: "POST", body: JSON.stringify({ kind: "video", provider, payload }) }, token)
+			const jobId = res?.job_id || res?.id
+			setJobId(jobId)
 		} catch (e: any) {
 			setStatus("failed")
 			setError(e?.message || "Failed to start job")
@@ -75,7 +79,8 @@ export function VideoHub({ isGenerating: _isGenerating }: VideoHubProps) {
 		let mounted = true
 		const interval = setInterval(async () => {
 			try {
-				const data = await getJob(jobId)
+				const token = await getToken(); if (!token) return
+				const data = await apiRequest(`/v1/media/jobs/${jobId}`, {}, token)
 				if (!mounted) return
 				setStatus(data.status)
 				if (data.error_message) setError(data.error_message)
