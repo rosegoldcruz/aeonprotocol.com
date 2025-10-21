@@ -1,4 +1,6 @@
 name: api-ci
+# ensure paths are relative to working-directory: services/api
+
 on: [push, pull_request]
 jobs:
   check:
@@ -11,13 +13,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r services/api/requirements.txt
+      - run: pip install -r requirements.txt
       - run: pip install pytest-cov
       - run: ruff check .
-      - run: pytest services/api/tests --cov=services/api/app --cov-report=xml --cov-report=term
+      - run: pytest tests --cov=app --cov-report=xml --cov-report=term
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: api-coverage-xml
-          path: services/api/coverage.xml
+          path: coverage.xml
 
