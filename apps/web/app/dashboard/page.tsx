@@ -36,6 +36,11 @@ import { ImageStudio } from "@/components/modules/image-studio"
 import { VideoHub } from "@/components/modules/video-hub"
 import { AiCoder } from "@/components/modules/ai-coder"
 import { AudioSuite } from "@/components/modules/audio-suite"
+import dynamic from "next/dynamic"
+const ThreeNodeNetwork = dynamic(() => import("@/components/bg/three-node-network").then(m => m.ThreeNodeNetwork), { ssr: false })
+import { MetricsChart } from "@/components/charts/metrics-chart"
+import { useJobEvents } from "@/components/realtime/job-events"
+import { toast } from "sonner"
 
 interface Job {
   id: number
@@ -110,6 +115,19 @@ export default function DashboardPage() {
       }
     })
   }, [jobs, assets])
+
+  // Realtime job status updates via WebSocket (fallback to polling remains)
+  useJobEvents((evt) => {
+    setJobs((prev) => {
+      const found = prev.some((j) => j.id === evt.id)
+      const next = prev.map((j) => (j.id === evt.id ? { ...j, status: evt.status } : j))
+      return found ? next : prev
+    })
+    if (evt.status === "completed") {
+      toast.success("Job completed", { description: `#${evt.id} is ready` })
+      fetchJobAssets(evt.id)
+    }
+  })
 
   const handleGenerate = async () => {
     if (!prompt.trim() || !authLoaded || !userLoaded) return
@@ -326,8 +344,9 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <AuthHeader />
+      <ThreeNodeNetwork />
 
-      <div className="container mx-auto p-6 space-y-8">
+      <div className="relative z-10 container mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3">
@@ -347,6 +366,28 @@ export default function DashboardPage() {
               className="bg-gray-800/50 border-gray-700 text-white placeholder-gray-400"
             />
           </div>
+        </div>
+
+        {/* Live Metrics */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="bg-gray-800/60 backdrop-blur-md border-gray-700 col-span-2">
+            <CardHeader>
+              <CardTitle className="text-white">Job Throughput (last 24h ticks)</CardTitle>
+              <CardDescription>Created vs Completed</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MetricsChart />
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-800/60 backdrop-blur-md border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white">Tips</CardTitle>
+              <CardDescription>Generate media and watch realtime updates</CardDescription>
+            </CardHeader>
+            <CardContent className="text-gray-300 text-sm">
+              Realtime updates flow over secure WebSockets. Your assets will appear as soon as the job completes.
+            </CardContent>
+          </Card>
         </div>
 
         {/* App Grid - OS Style */}

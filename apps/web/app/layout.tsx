@@ -2,6 +2,7 @@ import './globals.css'
 import type { ReactNode } from 'react'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { Toaster } from 'sonner'
 
 export const metadata = {
   title: 'AEON',
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <body className="min-h-screen bg-background text-foreground">
           <ErrorBoundary>
             {children}
+            <Toaster theme="dark" richColors position="top-right" />
           </ErrorBoundary>
         </body>
       </html>

@@ -1,27 +1,28 @@
-import os
+import warnings
+from .database.neon_db import (
+	engine,
+	AsyncSessionLocal,
+	Base,
+	get_db,
+	init_database,
+	check_database_health,
+	Tenant,
+	User,
+	Membership,
+	Project,
+	Job,
+	Asset,
+	Agent,
+	Integration,
+	Workflow,
+	Comment,
+	UserRole,
+	JobStatus,
+	JobType,
+	MediaType,
+)
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-# Neon PostgreSQL Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL is required")
-
-# Convert postgres:// to postgresql+asyncpg:// for SQLAlchemy async
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
-
-# Async engine and session
-engine = create_async_engine(DATABASE_URL, echo=True)
-AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-Base = declarative_base()
-
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+warnings.warn(
+	"services.api.app.database is a compatibility shim; import from services.api.app.database.neon_db instead",
+	DeprecationWarning,
+)

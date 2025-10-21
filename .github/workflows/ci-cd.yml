@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: pip install -r requirements.txt
-      - run: pytest services/api/tests -q
+      - run: pip install -r services/api/requirements.txt
+      - run: pytest services/api/tests --cov=services/api/app --cov-report=xml
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
       - run: npm ci --prefix apps/web
@@ -129,6 +129,18 @@ jobs:
                   redis:
                     condition: service_healthy
 
+              webgen-consumer:
+                image: ${IMAGE_REGISTRY}-worker:latest
+                command: python -m services.worker.webgen_consumer
+                env_file:
+                  - ./.env
+                depends_on:
+                  postgres:
+                    condition: service_healthy
+                  redis:
+                    condition: service_healthy
+
+
               web:
                 image: ${IMAGE_REGISTRY}-web:latest
                 env_file:
@@ -206,4 +218,4 @@ jobs:
             chmod +x deployment/deploy.sh
 
             # Run deploy
-            ./deployment/deploy.sh 
+            ./deployment/deploy.sh

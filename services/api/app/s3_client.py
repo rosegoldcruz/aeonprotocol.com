@@ -2,10 +2,12 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 from typing import Optional
+from urllib.parse import urlparse, urlunparse
 
 # S3 configuration
 S3_BUCKET = os.environ.get("S3_BUCKET", "aeon-dev-bucket")
 S3_ENDPOINT = os.environ.get("S3_ENDPOINT")
+S3_PUBLIC_ENDPOINT = os.environ.get("S3_PUBLIC_ENDPOINT")
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
@@ -29,12 +31,21 @@ s3_client = boto3.client("s3", **s3_config)
 def generate_presigned_url(s3_key: str, bucket: str = S3_BUCKET, expiration: int = 3600) -> Optional[str]:
     """Generate a presigned URL for S3 object"""
     try:
-        response = s3_client.generate_presigned_url(
+        url = s3_client.generate_presigned_url(
             'get_object',
             Params={'Bucket': bucket, 'Key': s3_key},
             ExpiresIn=expiration
         )
-        return response
+        # In dev with LocalStack, rewrite internal host to public host if provided
+        if S3_PUBLIC_ENDPOINT:
+            try:
+                original = urlparse(url)
+                public = urlparse(S3_PUBLIC_ENDPOINT)
+                # Keep path/query/signature intact, swap scheme+netloc
+                url = urlunparse((public.scheme or original.scheme, public.netloc or original.netloc, original.path, original.params, original.query, original.fragment))
+            except Exception:
+                pass
+        return url
     except ClientError as e:
         print(f"Error generating presigned URL: {e}")
         return None

@@ -1,0 +1,1 @@
+This repository has been updated to standardize dependency installation paths, fix local dev API URL, add missing auth helper, and add a webgen queue consumer. See PR description for details.

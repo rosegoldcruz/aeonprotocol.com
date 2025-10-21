@@ -7,8 +7,7 @@ from ..s3_client import generate_presigned_url
 from ..celery_client import celery_app
 from redis.asyncio import from_url as redis_from_url
 from sqlalchemy import select, update
-from ..database import get_db
-from ..models import Job as JobModel, JobStatus as JobStatusEnum, JobType as JobTypeEnum, Tenant
+from ..database.neon_db import get_db, Job as JobModel, JobStatus as JobStatusEnum, JobType as JobTypeEnum, Tenant, Asset
 
 router = APIRouter(tags=["jobs"])
 
@@ -77,7 +76,7 @@ async def create_job(body: CreateJob, claims=Depends(verify_bearer), idempotency
     else:
         res = celery_app.send_task("worker.generate_image", kwargs={"prompt": body.input_data.get("prompt", ""), "job_id": job.id})
 
-    await db.execute(update(JobModel).where(JobModel.id==job.id).values(provider_job_id=str(res.id)))
+    await db.execute(update(JobModel).where(JobModel.id==job.id).values(external_job_id=str(res.id)))
     await db.commit()
 
     if idem_key:
@@ -93,7 +92,7 @@ async def get_job(job_id: int, claims=Depends(verify_bearer), db=Depends(get_db)
     if not job:
         raise HTTPException(404, "not found")
 
-    task_id = job.provider_job_id
+    task_id = job.external_job_id
     result_url = None
     normalized = job.status.name.lower()
     if task_id:
@@ -140,3 +139,140 @@ async def stream_jobs(id: int | None = None, db=Depends(get_db)):
                 await asyncio.sleep(1)
     return EventSourceResponse(gen())
 
+
+
+# --- Shim endpoints for current dashboard expectations ---
+from pydantic import BaseModel, Field
+from sqlalchemy import select as sa_select
+
+class ImageGenerateBody(BaseModel):
+    prompt: str
+    model: str | None = None
+    width: int | None = None
+    height: int | None = None
+    num_outputs: int | None = None
+    guidance_scale: float | None = None
+    num_inference_steps: int | None = None
+
+@router.post("/v1/jobs/image-generate")
+async def image_generate(body: ImageGenerateBody, claims=Depends(verify_bearer), db=Depends(get_db)):
+    tenant_slug = (claims.get("org_id") or claims.get("sub") or "anon").replace(" ", "-")
+    tenant_id = await _ensure_tenant(db, tenant_slug)
+    job = JobModel(
+        tenant_id=tenant_id,
+        type=JobTypeEnum.IMAGE_GENERATION,
+        status=JobStatusEnum.PENDING,
+        input_data=body.model_dump(),
+        provider="replicate",
+    )
+    db.add(job)
+    await db.commit()
+    await db.refresh(job)
+
+    # Build kwargs for worker
+    kwargs = {"job_id": job.id}
+    if body.width is not None: kwargs["width"] = body.width
+    if body.height is not None: kwargs["height"] = body.height
+    if body.num_outputs is not None: kwargs["num_outputs"] = body.num_outputs
+    if body.guidance_scale is not None: kwargs["guidance_scale"] = body.guidance_scale
+    if body.num_inference_steps is not None: kwargs["num_inference_steps"] = body.num_inference_steps
+
+    res = celery_app.send_task("worker.generate_image", kwargs={"prompt": body.prompt, **kwargs})
+    await db.execute(update(JobModel).where(JobModel.id==job.id).values(external_job_id=str(res.id)))
+    await db.commit()
+    return {"id": job.id, "status": "queued"}
+
+class VideoGenerateBody(BaseModel):
+    prompt: str
+    provider: str | None = Field(default="runway")
+    duration: int | None = 5
+    resolution: str | None = "1280x768"
+    video_type: str | None = "text_to_video"
+
+@router.post("/v1/jobs/video-generate")
+async def video_generate(body: VideoGenerateBody, claims=Depends(verify_bearer), db=Depends(get_db)):
+    tenant_slug = (claims.get("org_id") or claims.get("sub") or "anon").replace(" ", "-")
+    tenant_id = await _ensure_tenant(db, tenant_slug)
+    job = JobModel(
+        tenant_id=tenant_id,
+        type=JobTypeEnum.VIDEO_GENERATION,
+        status=JobStatusEnum.PENDING,
+        input_data=body.model_dump(),
+        provider=(body.provider or "runway"),
+    )
+    db.add(job)
+    await db.commit()
+    await db.refresh(job)
+
+    kwargs = {"job_id": job.id, "provider": body.provider or "runway", "video_type": body.video_type or "text_to_video"}
+    if body.duration is not None: kwargs["duration"] = body.duration
+    if body.resolution is not None: kwargs["resolution"] = body.resolution
+
+    res = celery_app.send_task("worker.generate_video", kwargs={"prompt": body.prompt, **kwargs})
+    await db.execute(update(JobModel).where(JobModel.id==job.id).values(external_job_id=str(res.id)))
+    await db.commit()
+    return {"id": job.id, "status": "queued"}
+
+class AudioGenerateBody(BaseModel):
+    text: str
+    voice_id: str | None = None
+
+@router.post("/v1/jobs/audio-generate")
+async def audio_generate(body: AudioGenerateBody, claims=Depends(verify_bearer), db=Depends(get_db)):
+    tenant_slug = (claims.get("org_id") or claims.get("sub") or "anon").replace(" ", "-")
+    tenant_id = await _ensure_tenant(db, tenant_slug)
+    job = JobModel(
+        tenant_id=tenant_id,
+        type=JobTypeEnum.AUDIO_GENERATION,
+        status=JobStatusEnum.PENDING,
+        input_data=body.model_dump(),
+        provider="elevenlabs",
+    )
+    db.add(job)
+    await db.commit()
+    await db.refresh(job)
+
+    kwargs = {"job_id": job.id}
+    if body.voice_id: kwargs["voice_id"] = body.voice_id
+
+    res = celery_app.send_task("worker.generate_audio", kwargs={"text": body.text, **kwargs})
+    await db.execute(update(JobModel).where(JobModel.id==job.id).values(external_job_id=str(res.id)))
+    await db.commit()
+    return {"id": job.id, "status": "queued"}
+
+@router.get("/v1/jobs")
+async def list_jobs(db=Depends(get_db)):
+    result = await db.execute(sa_select(JobModel).order_by(JobModel.created_at.desc()).limit(20))
+    rows = result.scalars().all()
+    jobs = []
+    for j in rows:
+        jobs.append({
+            "id": j.id,
+            "type": (j.type.value if hasattr(j.type, "value") else str(j.type)),
+            "status": (j.status.value if hasattr(j.status, "value") else str(j.status)),
+            "input_data": j.input_data,
+            "output_data": j.output_data,
+            "created_at": j.created_at.isoformat() if getattr(j, "created_at", None) else None,
+            "completed_at": j.completed_at.isoformat() if getattr(j, "completed_at", None) else None,
+            "error_message": j.error_message,
+        })
+    return {"jobs": jobs}
+
+@router.get("/v1/jobs/{job_id}/assets")
+async def list_job_assets(job_id: int, db=Depends(get_db)):
+    result = await db.execute(sa_select(JobModel).where(JobModel.id==job_id))
+    job = result.scalar_one_or_none()
+    if not job:
+        raise HTTPException(404, "not found")
+    assets_res = await db.execute(sa_select(Asset).where(Asset.job_id==job_id))
+    asset_rows = assets_res.scalars().all()
+    out = []
+    for a in asset_rows:
+        out.append({
+            "id": a.id,
+            "s3_key": a.s3_key,
+            "s3_bucket": a.s3_bucket,
+            "media_type": (a.media_type.value if hasattr(a.media_type, "value") else str(a.media_type)),
+            "presigned_url": generate_presigned_url(a.s3_key, a.s3_bucket),
+        })
+    return out

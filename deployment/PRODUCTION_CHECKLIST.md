@@ -19,7 +19,7 @@
 
 ## 🏗️ INFRASTRUCTURE DEPLOYMENT CHECKLIST
 
-### DigitalOcean Droplet Setup (147.182.231.0)
+### DigitalOcean Droplet Setup (your-server-ip)
 - [ ] **Run droplet setup script**: `bash deployment/droplet-setup.sh`
 - [ ] **Verify system services**:
   - [ ] PostgreSQL running and configured
@@ -45,8 +45,8 @@
 
 ### Frontend Configuration
 - [ ] **Update Vercel environment variables**:
-  - [ ] Production: `NEXT_PUBLIC_API_URL=http://147.182.231.0/api`
-  - [ ] Preview: `NEXT_PUBLIC_API_URL=http://147.182.231.0/api`
+  - [ ] Production: `NEXT_PUBLIC_API_URL=https://YOUR_API_DOMAIN/api`
+  - [ ] Preview: `NEXT_PUBLIC_API_URL=https://YOUR_API_DOMAIN/api`
   - [ ] Development: `NEXT_PUBLIC_API_URL=http://localhost:8000/api`
   - [ ] `REPLICATE_API_TOKEN=your_actual_token`
   - [ ] `REPLICATE_HAILUO_VERSION_ID=actual_model_version`
@@ -59,8 +59,8 @@
 - [ ] **Check API response times** (< 3 seconds)
 
 ### Manual Testing Checklist
-- [ ] **Health Check**: `curl http://147.182.231.0/health`
-- [ ] **API Documentation**: Visit `http://147.182.231.0/api/docs`
+- [ ] **Health Check**: `curl https://YOUR_API_DOMAIN/health`
+- [ ] **API Documentation**: Visit `https://YOUR_API_DOMAIN/api/docs`
 - [ ] **Video Generation**:
   - [ ] Test video generation API with Token authorization
   - [ ] Verify status polling works correctly
@@ -130,7 +130,7 @@
 - [ ] **Certificate Renewal**: Automated renewal configured
 
 ### DNS Configuration
-- [ ] **A Record**: Points to 147.182.231.0
+- [ ] **A Record**: Points to YOUR_SERVER_IP (keep this out of source control)
 - [ ] **CNAME Records**: Configured for subdomains
 - [ ] **TTL Settings**: Appropriate for production
 
@@ -200,3 +200,24 @@ Once all items in this checklist are completed, your AEON Platform will be:
 - Check logs: `sudo journalctl -u aeon-api -f`
 - Run tests: `bash deployment/test-deployment.sh`
 - Review documentation: `deployment/DEPLOYMENT_GUIDE.md`
+
+# Unified Web → API Boundary
+
+- Required envs:
+  - `NEXT_PUBLIC_API_URL` (e.g., http://your-domain/api)
+  - `CORS_ALLOW_ORIGINS` (comma-separated; must include your web origin)
+  - `DATABASE_URL`, `REDIS_URL`, `AWS_REGION`, `S3_BUCKET`, optional `S3_ENDPOINT_URL`
+  - Clerk: `CLERK_ISSUER`, `CLERK_JWKS_URL`, `CLERK_AUDIENCE`
+
+- Smoke steps:
+
+```bash
+curl -sf http://localhost/api/health
+TOKEN=your_clerk_jwt
+curl -s -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"kind":"video","provider":"runway","payload":{"prompt":"a fox running","duration":4}}' \
+  http://localhost/api/v1/media/jobs
+```
+
+Ensure job ID is returned; poll `/api/v1/media/jobs/{id}` until `status=completed` and open the returned `assets[0].url`.

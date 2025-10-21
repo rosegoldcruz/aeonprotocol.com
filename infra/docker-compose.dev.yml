@@ -10,7 +10,7 @@ services:
       - ../.env.local
     environment:
       # Use API service for development - Docker internal networking
-      - NEXT_PUBLIC_API_URL=http://api:8000/api
+      - NEXT_PUBLIC_BACKEND_URL=http://api:8000
       # Alternative: Use localhost for external access
       # - NEXT_PUBLIC_BACKEND_HOST=localhost
       # - NEXT_PUBLIC_BACKEND_PORT=8000
@@ -24,7 +24,7 @@ services:
   api:
     build:
       context: ../
-      dockerfile: ./services/api/Dockerfile
+      dockerfile: ./deployment/Dockerfile.api
     env_file:
       - ../.env.local
     environment:
@@ -34,6 +34,14 @@ services:
       - AWS_SECRET_ACCESS_KEY=localstack
       - AWS_REGION=us-east-1
       - S3_BUCKET=aeon-dev-bucket
+      - S3_PUBLIC_ENDPOINT=http://localhost:4566
+      - CORS_ALLOW_ORIGINS=http://localhost:3000
+      - CLERK_ISSUER=http://localhost
+      - CLERK_JWKS_URL=http://localhost/.well-known/jwks.json
+      - CLERK_AUDIENCE=dev
+      - DEV_DISABLE_AUTH=true
+
+
       - S3_FORCE_PATH_STYLE=true
     ports:
       - "8000:8000"
@@ -44,7 +52,7 @@ services:
   worker:
     build:
       context: ../
-      dockerfile: ./services/worker/Dockerfile
+      dockerfile: ./deployment/Dockerfile.worker
     env_file:
       - ../.env.local
     environment:
@@ -58,6 +66,18 @@ services:
     depends_on:
       - redis
       - localstack
+  webgen-consumer:
+    build:
+      context: ../
+      dockerfile: ./deployment/Dockerfile.worker
+    command: python -m services.worker.webgen_consumer
+    env_file:
+      - ../.env.local
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
 
   # PostgreSQL removed - using Neon cloud database
 

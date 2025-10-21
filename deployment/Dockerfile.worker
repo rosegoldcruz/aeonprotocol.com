@@ -28,7 +28,7 @@ RUN apt-get update \
 RUN groupadd -r aeon && useradd -r -g aeon aeon
 
 # Copy requirements first for better caching
-COPY requirements.txt /app/
+COPY services/worker/requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 

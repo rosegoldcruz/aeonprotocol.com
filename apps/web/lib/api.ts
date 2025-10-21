@@ -1,31 +1,33 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-if (!API_URL) throw new Error("NEXT_PUBLIC_API_URL missing");
+import { auth } from '@clerk/nextjs/server'
 
-export type Job = {
-  id: string;
-  status: "queued" | "processing" | "completed" | "failed" | "pending";
-  result_url?: string | null;
-  created_at?: string;
-};
-
-function normalize(job: Job): Job {
-  return { ...job, status: job.status === "pending" ? "queued" : job.status };
+const BASE_URL = process.env['NEXT_PUBLIC_API_URL'] as string
+if (!BASE_URL) {
+	throw new Error('NEXT_PUBLIC_API_URL is required')
 }
 
-async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    ...init,
-    headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
-    credentials: "include",
-  });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  const data = (await res.json()) as T;
-  return data;
+async function withAuthHeaders(init?: RequestInit): Promise<RequestInit> {
+	const { getToken } = auth()
+	const token = await getToken()
+	const headers = new Headers(init?.headers || {})
+	if (token) headers.set('Authorization', `Bearer ${token}`)
+	headers.set('Content-Type', 'application/json')
+	return { ...init, headers }
 }
 
-export const Api = {
-  createJob: async (payload: Record<string, unknown>) => normalize(await req<Job>("/v1/jobs", { method: "POST", body: JSON.stringify(payload) })),
-  getJob: async (id: string) => normalize(await req<Job>(`/v1/jobs/${id}`)),
-  streamJobsUrl: () => `${API_URL}/v1/jobs/stream`,
-};
+export async function createJob(params: { kind: 'image' | 'video' | 'audio'; provider: string; payload: any }) {
+	const res = await fetch(`${BASE_URL}/v1/media/jobs`, await withAuthHeaders({
+		method: 'POST',
+		body: JSON.stringify(params),
+	}))
+	if (!res.ok) throw new Error(`createJob failed: ${res.status}`)
+	return res.json() as Promise<{ job_id: number }>
+}
+
+export async function getJob(jobId: number) {
+	const res = await fetch(`${BASE_URL}/v1/media/jobs/${jobId}`, await withAuthHeaders({
+		cache: 'no-store',
+	}))
+	if (!res.ok) throw new Error(`getJob failed: ${res.status}`)
+	return res.json() as Promise<{ status: string; error_message?: string; assets: Array<{ id: number; url: string | null; mime_type?: string; width?: number; height?: number; duration?: number }> }>
+}
 
