@@ -126,13 +126,27 @@ export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps
     );
   }
 
+  // v0 demos block iframe embedding, show a button to open in new tab
   return (
-    <iframe
-      key={refreshKey}
-      src={iframeSrc}
-      className={cn("flex-1 w-full border-0 bg-white", className)}
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-      {...props}
-    />
+    <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-muted/30 to-muted/50">
+      <div className="text-center space-y-6">
+        <div className="text-6xl">✨</div>
+        <div>
+          <p className="text-2xl font-semibold mb-2">Your app is ready!</p>
+          <p className="text-muted-foreground mb-6">Click below to view your generated app</p>
+        </div>
+        <Button
+          size="lg"
+          className="gap-2 text-lg px-8 py-6"
+          onClick={() => window.open(iframeSrc, "_blank")}
+        >
+          <ExternalLink className="h-5 w-5" />
+          Open Preview
+        </Button>
+        <p className="text-xs text-muted-foreground mt-4">
+          Opens in a new tab • Powered by v0
+        </p>
+      </div>
+    </div>
   );
 }
