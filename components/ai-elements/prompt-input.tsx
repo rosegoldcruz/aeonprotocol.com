@@ -28,7 +28,7 @@ function usePromptInput() {
   return context;
 }
 
-interface PromptInputProps extends React.HTMLAttributes<HTMLFormElement> {
+interface PromptInputProps extends Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   onSubmit: (message: PromptInputMessage) => void;
   isLoading?: boolean;
 }
