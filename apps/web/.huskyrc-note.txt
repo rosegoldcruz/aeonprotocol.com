@@ -1,2 +1,0 @@
-Run `npm i -D husky lint-staged` in apps/web and then `npm run prepare` to activate .husky/pre-commit in the repo root if Husky is managed at root. In a monorepo ensure git hooks path includes this .husky directory.
-
