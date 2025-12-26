@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v0 } from "v0-sdk";
+import { v0, type ChatDetail } from "v0-sdk";
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,19 +20,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let chat;
+    let chat: ChatDetail;
 
     if (chatId) {
       // Continue existing chat - iterate on the app
       chat = await v0.chats.sendMessage({
         chatId: chatId,
         message,
-      });
+      }) as ChatDetail;
     } else {
       // Create new chat - start fresh app
       chat = await v0.chats.create({
         message,
-      });
+      }) as ChatDetail;
     }
 
     // Get the demo URL from the latest version
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       id: chat.id,
       demo: demoUrl,
-      webUrl: chat.webUrl, // Link to view in v0.dev
+      webUrl: chat.webUrl,
     });
   } catch (error) {
     console.error("V0 API Error:", error);
