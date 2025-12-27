@@ -133,7 +133,7 @@ export function ProjectSidebar({
       {/* Footer */}
       <div className="p-3 border-t">
         <p className="text-xs text-muted-foreground text-center">
-          Powered by v0
+          © {new Date().getFullYear()} Aeon Protocol
         </p>
       </div>
     </div>
