@@ -1,0 +1,41 @@
+// Prisma schema for Nile PostgreSQL (multi-tenant)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Nile multi-tenant tables - tenant_id is part of primary key
+
+model Project {
+  tenantId  String    @map("tenant_id") @db.Uuid
+  id        String    
+  name      String
+  userId    String    @map("user_id")
+  chatId    String?   @map("chat_id")
+  demoUrl   String?   @map("demo_url")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @map("updated_at")
+
+  messages  Message[]
+
+  @@id([tenantId, id])
+  @@map("projects")
+}
+
+model Message {
+  tenantId  String   @map("tenant_id") @db.Uuid
+  id        String
+  projectId String   @map("project_id")
+  role      String
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project   Project  @relation(fields: [tenantId, projectId], references: [tenantId, id], onDelete: Cascade)
+
+  @@id([tenantId, id])
+  @@map("messages")
+}

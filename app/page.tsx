@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   PromptInput,
@@ -21,23 +21,62 @@ import {
 } from "@/components/ai-elements/web-preview";
 import { Loader } from "@/components/ai-elements/loader";
 import { Suggestions, Suggestion } from "@/components/ai-elements/suggestion";
-import Image from "next/image";
+import { ProjectSidebar } from "@/components/project-sidebar";
 
-interface Chat {
+interface Project {
+  tenantId: string;
   id: string;
-  demo: string;
+  name: string;
+  demoUrl: string | null;
+  chatId: string | null;
+  createdAt: string;
+}
+
+interface ChatMessage {
+  type: "user" | "assistant";
+  content: string;
 }
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [currentChat, setCurrentChat] = useState<Chat | null>(null);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<
-    Array<{
-      type: "user" | "assistant";
-      content: string;
-    }>
-  >([]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+
+  // Load messages when project changes
+  useEffect(() => {
+    if (currentProject?.id) {
+      loadProjectMessages(currentProject.id);
+    }
+  }, [currentProject?.id]);
+
+  const loadProjectMessages = async (projectId: string) => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}/messages`);
+      if (response.ok) {
+        const messages = await response.json();
+        setChatHistory(
+          messages.map((m: { role: string; content: string }) => ({
+            type: m.role as "user" | "assistant",
+            content: m.content,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    }
+  };
+
+  const handleSelectProject = (project: Project) => {
+    setCurrentProject(project);
+    setMessage("");
+  };
+
+  const handleNewProject = () => {
+    setCurrentProject(null);
+    setChatHistory([]);
+    setMessage("");
+  };
 
   const handleSendMessage = async (promptMessage: PromptInputMessage) => {
     const hasText = Boolean(promptMessage.text);
@@ -58,7 +97,8 @@ export default function Home() {
         },
         body: JSON.stringify({
           message: userMessage,
-          chatId: currentChat?.id,
+          chatId: currentProject?.chatId,
+          projectId: currentProject?.id,
         }),
       });
 
@@ -67,8 +107,17 @@ export default function Home() {
         throw new Error(error.error || "Failed to create app");
       }
 
-      const chat: Chat = await response.json();
-      setCurrentChat(chat);
+      const result = await response.json();
+      
+      // Update current project with the new data
+      setCurrentProject({
+        tenantId: "00000000-0000-0000-0000-000000000000",
+        id: result.projectId,
+        name: currentProject?.name || userMessage.slice(0, 50),
+        chatId: result.id,
+        demoUrl: result.demo,
+        createdAt: currentProject?.createdAt || new Date().toISOString(),
+      });
 
       setChatHistory((prev) => [
         ...prev,
@@ -96,21 +145,23 @@ export default function Home() {
 
   return (
     <div className="h-screen flex">
+      {/* Project Sidebar */}
+      <ProjectSidebar
+        currentProjectId={currentProject?.id || null}
+        onSelectProject={handleSelectProject}
+        onNewProject={handleNewProject}
+      />
+
       {/* Chat Panel */}
-      <div className="w-1/2 flex flex-col border-r">
+      <div className="flex-1 flex flex-col border-r">
         {/* Header */}
-        <div className="border-b p-3 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/tmpocncbr5a.png"
-              alt="Aeon"
-              width={200}
-              height={48}
-              className="h-12 w-auto object-contain"
-              priority
-            />
-          </div>
-          <span className="text-xs text-muted-foreground">Powered by v0</span>
+        <div className="border-b p-3 h-14 flex items-center justify-between">
+          <h1 className="text-lg font-semibold truncate">
+            {currentProject?.name || "New Project"}
+          </h1>
+          <span className="text-xs text-muted-foreground">
+            {currentProject ? "Iterating..." : "Start building"}
+          </span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -149,7 +200,7 @@ export default function Home() {
 
         {/* Input */}
         <div className="border-t p-4">
-          {!currentChat && chatHistory.length === 0 && (
+          {!currentProject && chatHistory.length === 0 && (
             <Suggestions>
               <Suggestion
                 onClick={() =>
@@ -191,7 +242,7 @@ export default function Home() {
               status={isLoading ? "streaming" : "ready"}
             />
           </PromptInput>
-          {currentChat && (
+          {currentProject && (
             <p className="text-xs text-muted-foreground mt-2 text-center">
               Keep chatting to iterate on your app
             </p>
@@ -206,10 +257,10 @@ export default function Home() {
             <WebPreviewUrl
               readOnly
               placeholder="Your app preview URL..."
-              value={currentChat?.demo || ""}
+              value={currentProject?.demoUrl || ""}
             />
           </WebPreviewNavigation>
-          <WebPreviewBody src={currentChat?.demo} />
+          <WebPreviewBody src={currentProject?.demoUrl || undefined} />
         </WebPreview>
       </div>
     </div>
