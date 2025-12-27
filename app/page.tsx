@@ -21,7 +21,7 @@ import {
 } from "@/components/ai-elements/web-preview";
 import { Loader } from "@/components/ai-elements/loader";
 import { Suggestions, Suggestion } from "@/components/ai-elements/suggestion";
-import { Code2 } from "lucide-react";
+import Image from "next/image";
 
 interface Chat {
   id: string;
@@ -101,8 +101,14 @@ export default function Home() {
         {/* Header */}
         <div className="border-b p-3 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Code2 className="h-6 w-6 text-primary" />
-            <h1 className="text-lg font-semibold">AEON Coder</h1>
+            <Image
+              src="/tmpocncbr5a.png"
+              alt="Aeon"
+              width={120}
+              height={32}
+              className="h-8 w-auto object-contain"
+              priority
+            />
           </div>
           <span className="text-xs text-muted-foreground">Powered by v0</span>
         </div>
