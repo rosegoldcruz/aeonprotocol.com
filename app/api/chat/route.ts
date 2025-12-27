@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { v0, type ChatDetail } from "v0-sdk";
 import { prisma } from "@/lib/db";
 import { randomUUID } from "crypto";
+import { createSwarm, orchestrator } from "@/lib/agents";
 
 const DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000000";
 
@@ -24,15 +24,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let chat: ChatDetail;
     let project;
+    let swarmResult;
+
+    // Log the incoming request for debugging
+    console.log(`[Chat API] Received request - chatId: ${chatId}, projectId: ${projectId}`);
+    console.log(`[Chat API] Message preview: ${message.slice(0, 100)}...`);
+
+    // Analyze the prompt complexity
+    const analysis = orchestrator.analyzeAndPlan(message);
+    console.log(`[Chat API] Orchestrator Analysis:`, {
+      complexity: analysis.complexity,
+      requiredAgents: analysis.requiredAgents,
+      taskCount: analysis.taskPlan.length,
+      risks: analysis.riskFactors,
+    });
 
     if (chatId && projectId) {
-      // Continue existing chat - iterate on the app
-      chat = await v0.chats.sendMessage({
-        chatId: chatId,
-        message,
-      }) as ChatDetail;
+      // ═══════════════════════════════════════════════════════════════════
+      // CONTINUE EXISTING CHAT - Iterate on the app with swarm intelligence
+      // ═══════════════════════════════════════════════════════════════════
+      
+      console.log(`[Chat API] Continuing existing chat: ${chatId}`);
+      
+      // Create swarm for iteration
+      const swarm = createSwarm(message);
+      swarmResult = await swarm.continueChat(chatId, message);
+
+      // Log execution details
+      console.log(`[Chat API] Swarm execution log:`, swarmResult.executionLog);
 
       // Save the user message
       await prisma.message.create({
@@ -46,45 +66,61 @@ export async function POST(request: NextRequest) {
       });
 
       // Update project with latest demo URL
-      const demoUrl = chat.latestVersion?.demoUrl || null;
       project = await prisma.project.update({
         where: {
           tenantId_id: { tenantId: DEFAULT_TENANT_ID, id: projectId },
         },
         data: {
-          demoUrl,
+          demoUrl: swarmResult.demoUrl,
           updatedAt: new Date(),
         },
       });
 
-      // Save assistant message
+      // Save assistant message with execution details
+      const assistantMessage = swarmResult.success 
+        ? `✨ Your app has been updated!\n\n📊 Analysis: ${analysis.complexity} complexity\n👥 Agents Used: ${analysis.requiredAgents.join(', ')}\n\nCheck the preview to see your changes.`
+        : `⚠️ Update completed with some issues. Check the preview.`;
+
       await prisma.message.create({
         data: {
           tenantId: DEFAULT_TENANT_ID,
           id: randomUUID(),
           projectId,
           role: "assistant",
-          content: "✨ Your app has been updated! Check the preview.",
+          content: assistantMessage,
         },
       });
 
     } else {
-      // Create new chat - start fresh app
-      chat = await v0.chats.create({
-        message,
-      }) as ChatDetail;
+      // ═══════════════════════════════════════════════════════════════════
+      // CREATE NEW CHAT - Start fresh app with full swarm power
+      // ═══════════════════════════════════════════════════════════════════
+      
+      console.log(`[Chat API] Creating new chat with swarm...`);
+      
+      // Create and execute the swarm
+      const swarm = createSwarm(message);
+      swarmResult = await swarm.execute();
 
-      const demoUrl = chat.latestVersion?.demoUrl || null;
+      // Log full execution details
+      console.log(`[Chat API] Swarm execution complete:`, {
+        success: swarmResult.success,
+        chatId: swarmResult.chatId,
+        completedTasks: swarmResult.completedTasks,
+        totalTasks: swarmResult.totalTasks,
+      });
+      swarmResult.executionLog.forEach(log => console.log(log));
 
       // Create new project in database
+      const newProjectId = randomUUID();
       project = await prisma.project.create({
         data: {
           tenantId: DEFAULT_TENANT_ID,
-          id: randomUUID(),
+          id: newProjectId,
           name: message.slice(0, 50) + (message.length > 50 ? "..." : ""),
           userId: "anonymous",
-          chatId: chat.id,
-          demoUrl,
+          chatId: swarmResult.chatId,
+          demoUrl: swarmResult.demoUrl,
         },
       });
 
@@ -93,37 +129,65 @@ export async function POST(request: NextRequest) {
         data: {
           tenantId: DEFAULT_TENANT_ID,
           id: randomUUID(),
-          projectId: project.id,
+          projectId: newProjectId,
           role: "user",
           content: message,
         },
       });
 
-      // Save assistant message
+      // Save detailed assistant message
+      const taskSummary = analysis.taskPlan
+        .map((task, i) => `${i + 1}. [${task.assignedAgent}] ${task.description.slice(0, 60)}...`)
+        .join('\n');
+
+      const assistantMessage = `✨ Your app is ready!\n
+📊 **Build Analysis:**
+- Complexity: ${analysis.complexity.toUpperCase()}
+- Agents Deployed: ${analysis.requiredAgents.length}
+- Tasks Completed: ${swarmResult.completedTasks}/${swarmResult.totalTasks}
+
+🤖 **Agent Swarm Execution:**
+${taskSummary}
+
+${analysis.riskFactors.length > 0 ? `\n⚠️ **Notes:**\n${analysis.riskFactors.join('\n')}` : ''}
+
+Check the preview panel on the right to see your creation!`;
+
       await prisma.message.create({
         data: {
           tenantId: DEFAULT_TENANT_ID,
           id: randomUUID(),
-          projectId: project.id,
+          projectId: newProjectId,
           role: "assistant",
-          content: "✨ Your app is ready! Check the preview panel on the right.",
+          content: assistantMessage,
         },
       });
     }
 
-    // Get the demo URL from the latest version
-    const demoUrl = chat.latestVersion?.demoUrl || null;
-
     return NextResponse.json({
-      id: chat.id,
+      id: swarmResult.chatId,
       projectId: project.id,
-      demo: demoUrl,
-      webUrl: chat.webUrl,
+      demo: swarmResult.demoUrl,
+      webUrl: swarmResult.webUrl,
+      analysis: {
+        complexity: analysis.complexity,
+        agents: analysis.requiredAgents,
+        tasks: analysis.taskPlan.length,
+      },
+      executionLog: swarmResult.executionLog,
     });
+
   } catch (error) {
-    console.error("V0 API Error:", error);
+    console.error("[Chat API] Error:", error);
     
-    // Handle specific v0 SDK errors
+    // Detailed error logging
+    if (error instanceof Error) {
+      console.error("[Chat API] Error name:", error.name);
+      console.error("[Chat API] Error message:", error.message);
+      console.error("[Chat API] Error stack:", error.stack);
+    }
+    
+    // Handle specific errors
     if (error instanceof Error) {
       if (error.message.includes("401") || error.message.includes("unauthorized")) {
         return NextResponse.json(
@@ -133,15 +197,49 @@ export async function POST(request: NextRequest) {
       }
       if (error.message.includes("429") || error.message.includes("rate")) {
         return NextResponse.json(
-          { error: "Rate limit exceeded. Please wait a moment and try again." },
+          { error: "Rate limit exceeded. The swarm is too powerful! Please wait a moment and try again." },
           { status: 429 }
+        );
+      }
+      if (error.message.includes("timeout")) {
+        return NextResponse.json(
+          { error: "Request timed out. Complex builds may take longer - try again or simplify your request." },
+          { status: 504 }
         );
       }
     }
 
     return NextResponse.json(
-      { error: "Failed to generate app. Please try again." },
+      { 
+        error: "Failed to generate app. The swarm encountered an error.",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }
+}
+
+// Health check endpoint
+export async function GET() {
+  const analysis = orchestrator.analyzeAndPlan("test health check");
+  
+  return NextResponse.json({
+    status: "operational",
+    swarm: {
+      agents: 10,
+      capabilities: [
+        "orchestrator",
+        "architect", 
+        "ui-specialist",
+        "three-specialist",
+        "shader-specialist",
+        "animation-specialist",
+        "interaction-specialist",
+        "performance-specialist",
+        "integration-specialist",
+        "qa-specialist"
+      ],
+    },
+    version: "2.0.0-swarm",
+  });
 }
