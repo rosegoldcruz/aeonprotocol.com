@@ -99,14 +99,14 @@ export default function Home() {
       {/* Chat Panel */}
       <div className="w-1/2 flex flex-col border-r">
         {/* Header */}
-        <div className="border-b p-3 h-14 flex items-center justify-between">
+        <div className="border-b p-3 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Image
               src="/tmpocncbr5a.png"
               alt="Aeon"
-              width={120}
-              height={32}
-              className="h-8 w-auto object-contain"
+              width={200}
+              height={48}
+              className="h-12 w-auto object-contain"
               priority
             />
           </div>
