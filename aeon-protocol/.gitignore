@@ -1,0 +1,44 @@
+# General
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+# Node / Frontend
+node_modules/
+.next/
+dist/
+build/
+.turbo/
+.cache/
+coverage/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+.ruff_cache/
+.venv/
+
+# Env files
+.env
+.env.*
+!.env.example
+frontend/.env
+backend-api/.env
+backend-workers/.env
+
+# IDEs
+.vscode/
+.idea/
+
+# Docker / Compose
+**/docker-*.log
+.docker/
+
+# Supabase
+.supabase/
+.sourcemaps/
+

@@ -1,0 +1,27 @@
+[project]
+name = "aeon-workers"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "celery>=5.3.6",
+  "redis>=5.0.0",
+  "structlog>=24.1.0",
+  "pydantic>=2.8.0",
+  "httpx>=0.27.0",
+  "tenacity>=9.0.0",
+  "sentry-sdk>=2.8.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+  "ruff>=0.6.5",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C90"]
+ignore = []
+
