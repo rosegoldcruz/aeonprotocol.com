@@ -1,0 +1,17 @@
+[project]
+name = "aeon-workers"
+version = "0.1.0"
+description = "AEON Protocol Celery workers"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "celery>=5.4.0",
+  "redis>=5.0.8",
+  "boto3>=1.35.0",
+  "httpx>=0.27.0",
+  "orjson>=3.10.0",
+  "structlog>=24.1.0",
+  "sentry-sdk>=2.13.0",
+]
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
