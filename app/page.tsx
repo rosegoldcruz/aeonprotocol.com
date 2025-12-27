@@ -195,7 +195,7 @@ export default function Home() {
 
       {/* Preview Panel */}
       <div className="w-1/2 flex flex-col bg-muted/30">
-        <WebPreview>
+        <WebPreview isLoading={isLoading}>
           <WebPreviewNavigation>
             <WebPreviewUrl
               readOnly

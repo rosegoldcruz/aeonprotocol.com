@@ -5,12 +5,15 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { RefreshCw, ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BuildLoader } from "./build-loader";
 
 interface WebPreviewContextValue {
   url?: string;
   setUrl: (url: string) => void;
   refresh: () => void;
   refreshKey: number;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 }
 
 const WebPreviewContext = React.createContext<WebPreviewContextValue | null>(null);
@@ -23,15 +26,22 @@ function useWebPreview() {
   return context;
 }
 
-interface WebPreviewProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface WebPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
+  isLoading?: boolean;
+}
 
-export function WebPreview({ children, className, ...props }: WebPreviewProps) {
+export function WebPreview({ children, className, isLoading = false, ...props }: WebPreviewProps) {
   const [url, setUrl] = React.useState<string>();
   const [refreshKey, setRefreshKey] = React.useState(0);
+  const [loading, setIsLoading] = React.useState(isLoading);
+
+  React.useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const refresh = () => setRefreshKey((k) => k + 1);
 
-  const contextValue = { url, setUrl, refresh, refreshKey };
+  const contextValue = { url, setUrl, refresh, refreshKey, isLoading: loading, setIsLoading };
 
   return (
     <WebPreviewContext.Provider value={contextValue}>
@@ -111,8 +121,13 @@ export function WebPreviewUrl({ className, value, ...props }: WebPreviewUrlProps
 interface WebPreviewBodyProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {}
 
 export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps) {
-  const { url, refreshKey } = useWebPreview();
+  const { url, refreshKey, isLoading } = useWebPreview();
   const iframeSrc = src || url;
+
+  // Show awesome loading screen while building
+  if (isLoading) {
+    return <BuildLoader />;
+  }
 
   if (!iframeSrc) {
     return (
