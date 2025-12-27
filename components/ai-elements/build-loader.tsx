@@ -133,7 +133,7 @@ export function BuildLoader({ className }: BuildLoaderProps) {
 
       {/* Bottom text */}
       <p className="absolute bottom-8 text-xs text-muted-foreground/50">
-        Powered by v0 • This usually takes 20-40 seconds
+        This usually takes 20-40 seconds
       </p>
     </div>
   );
