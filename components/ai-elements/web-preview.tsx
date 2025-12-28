@@ -55,7 +55,7 @@ export function WebPreview({ children, className, isLoading = false, ...props }:
   );
 }
 
-interface WebPreviewNavigationProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface WebPreviewNavigationProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function WebPreviewNavigation({
   className,
@@ -101,7 +101,7 @@ export function WebPreviewNavigation({
   );
 }
 
-interface WebPreviewUrlProps extends React.ComponentProps<typeof Input> {}
+interface WebPreviewUrlProps extends React.ComponentProps<typeof Input> { }
 
 export function WebPreviewUrl({ className, value, ...props }: WebPreviewUrlProps) {
   const { url } = useWebPreview();
@@ -118,7 +118,7 @@ export function WebPreviewUrl({ className, value, ...props }: WebPreviewUrlProps
   );
 }
 
-interface WebPreviewBodyProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {}
+interface WebPreviewBodyProps extends React.IframeHTMLAttributes<HTMLIFrameElement> { }
 
 export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps) {
   const { url, refreshKey, isLoading } = useWebPreview();
@@ -141,7 +141,7 @@ export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps
     );
   }
 
-  // v0 demos block iframe embedding, show a button to open in new tab
+  // Demos block iframe embedding, show a button to open in new tab
   return (
     <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-muted/30 to-muted/50">
       <div className="text-center space-y-6">
@@ -159,7 +159,7 @@ export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps
           Open Preview
         </Button>
         <p className="text-xs text-muted-foreground mt-4">
-          Opens in a new tab • Powered by v0
+          Opens in a new tab • Powered by AEON Agentic Technology
         </p>
       </div>
     </div>

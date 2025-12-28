@@ -1,0 +1,1200 @@
+
+. Move from static to motion
+Use:
+•	Framer Motion → smooth scroll-based and viewport animations.
+Prompt example:
+“Build a Next.js landing page using Framer Motion with scroll-triggered fade-in, slide-up, and parallax card animations.”
+•	GSAP (GreenSock) → cinematic sequences, object timelines, scroll sync.
+“Create a full-page GSAP ScrollTrigger scene with staggered section reveals and depth layering.”
+________________________________________
+2. Add 3D or shader depth
+•	Three.js / React Three Fiber (R3F) → 3D objects, particle effects, waves, spinning coins.
+“Render a rotating gold coin using React Three Fiber with ambient lighting and a gradient HDRI background.”
+“Build a Three.js shader that generates reactive radio-wave lines synced to scroll position.”
+________________________________________
+3. Use Parallax and scroll libraries
+•	Lenis + ScrollTrigger → buttery smooth scrolling, inertia.
+o	Combine with GSAP for advanced movement.
+“Add Lenis smooth scroll and parallax layers for background gradients and icons.”
+________________________________________
+4. Background effects
+•	Canvas + WebGL shaders (GLSL) for particle waves, nebula clouds, AI-style visuals.
+“Use a full-screen WebGL canvas with animated gradient noise and floating particles reacting to cursor position.”
+________________________________________
+5. Tooling + hosting
+Keep Vercel. Add build-time motion libs. Example stack:
+Next.js + TypeScript + Framer Motion + React Three Fiber + GSAP + Lenis
+________________________________________
+6. Prompt model
+When prompting AI builders (v0.dev, Windsurf, Cursor, etc.), include:
+“High-end 3D landing page. Cinematic, interactive scroll animations. Uses GSAP, Framer Motion, and React Three Fiber for movement and lighting. Must look like AITech.io or Apple.com—layered depth, parallax, hover physics.”
+________________________________________
+🔹 Core Mobile Optimization Prompts
+1.	Adaptive Motion Compression
+“Implement adaptive animation scaling for mobile using Framer Motion and GSAP. Detect device width, GPU tier, and battery state to dynamically reduce motion complexity, blur passes, and particle counts. Maintain 60 FPS parallax and auto-collapse navigation into a radial thumb-reachable menu using Web Vibration API.”
+2.	Gesture-Driven Navigation System
+“Build a fully gesture-controlled mobile navigation overlay. Swipes open panels with inertial deceleration via GSAP Draggable. Menu items reorder by thumb proximity and morph into a bottom-dock radial layout in portrait.”
+3.	Viewport-Responsive Shader Scaling
+“Create a responsive Three Fiber scene where shader resolution and lighting scale with devicePixelRatio. Use performance observers to lower render intensity on scroll-heavy devices.”
+4.	Context-Aware UI Density
+“Reflow components with CSS Clamp + ResizeObserver. Pause background effects during keyboard input or orientation change to keep 60 Hz input response.”
+5.	Touch-Optimized Parallax
+“Replace mouse-based motion with accelerometer/gyro data. Add friction easing and cap tilt at 5°.”
+6.	Elastic Viewport Scaling
+“Recalculate safe-area insets for iOS Dynamic Island and Android Punch-Hole. Use CSS env vars with clamps so heroes never clip on rotation.”
+7.	Low-Power Animation Fallbacks
+“Detect GPU throttling; swap WebGL particles for CSS/SVG equivalents while preserving LUT color grading.”
+8.	One-Thumb Interaction Zones
+“Shift primary controls to 40 % screen height; anchor GSAP ScrollTriggers for thumb reach.”
+9.	Orientation-Aware Layout Morphing
+“Morph portrait ↔ landscape layouts with Framer Motion transitions; sidebars become bottom sheets.”
+10.	Haptic-Synchronized Feedback Layer
+“Use Web Vibration API pulses mapped to animation curves so gestures feel tactile even on low-visual devices.”
+________________________________________
+🔹 Add-Ons from the Same Doc
+Use these for polish:
+•	Low-impact WebGL fallback — swap 3D scenes for static PNGs below 4 GB RAM.
+•	Responsive grid dashboards — grid + ResizeObserver; auto-collapse sidebar.
+•	Magnetic buttons / micro-interactions — short-range easing for touch feedback.
+•	Reduced-motion mode — respect prefers-reduced-motion, disable parallax.
+________________________________________
+🔹 Stack Reference
+Next.js 14 + TypeScript + Framer Motion + GSAP ScrollTrigger + React Three Fiber + GLSL + Lenis
+
+You already have composition skill. You’re just missing motion and shader logic.
+Start small—animate one section with GSAP or Framer Motion. Then layer Three.js for dynamic scenes.
+You’ll go from clean dashboards → living environments.
+Cinematic Hero Scene
+Build a Next.js 14 hero section using GSAP and Three.js where the camera slowly pans across floating 3D symbols as the headline fades in and the background gradient shifts with scroll depth.
+2.	Futuristic Dashboard Motion
+Create an admin dashboard interface that uses Framer Motion for staggered tile animations, ambient glowing edges, and micro hover feedback that feels like a sci-fi control panel.
+Construct a React Three Fiber scene with 3D particles orbiting a central logo. Make them react to mouse movement and scroll position using shader materials for glow and distortion.
+Parallax City Intro
+4.	Dynamic Particle Universe
+Design a scrolling landing page that layers multiple skyline silhouettes. Use Lenis for smooth scroll and GSAP ScrollTrigger for depth parallax so each layer moves at a different rate.
+5.	Magnetic Cursor Experience
+Build a home page where UI elements subtly follow the cursor using a magnetic easing effect, and buttons expand or distort as the cursor nears them.
+6.	Interactive Neural Network Background
+Generate a WebGL or Canvas network of connecting lines and dots that pulse with energy when hovered. Use React Three Fiber for node geometry and GLSL for line glow shaders.
+7.	Product Launch Storyline
+Create a vertical storytelling layout where each scroll event triggers Framer Motion transitions, moving text and images in opposite directions to simulate cinematic cuts.
+8.	Dark-Matter Loading Screen
+Build a fullscreen animated loading overlay using Three.js particles forming and collapsing into a logo with custom easing and volumetric lighting.
+9.	Holographic Pricing Table
+Design a pricing section that flips and refracts cards as the user hovers. Use CSS perspective and GSAP timelines to simulate holographic light streaks.
+10.	AI Control Room UI
+Develop a responsive control center where panels slide into view from different axes with synchronized sound-wave visualizers running in the background via Canvas API.
+3D Particle Sidebar
+Build a collapsible sidebar in Next.js with a React Three Fiber particle background that subtly moves with mouse motion. Each nav item triggers a small burst of particles when clicked.
+2.	Glassmorphic Navigation Hub
+Create a semi-transparent sidebar with frosted glass blur and neon edge lighting. On hover, items expand with Framer Motion spring transitions and ripple effects.
+3.	Holographic Navigation Overlay
+Design a full-screen overlay menu that opens with a 3D folding animation using GSAP. Menu items float slightly in 3D space and respond to cursor parallax.
+4.	Magnetic Side Dock
+Construct a magnetic side navigation bar that curves icons toward the cursor using GSAP physics and hover inertia.
+5.	Cinematic Scroll Hero
+Create a hero section that animates layers of text, logos, and background video in 3D parallax with ScrollTrigger. As the user scrolls, the camera “flies” through elements.
+6.	Neural Particle Field
+Build a full-screen background with particles connecting dynamically like neural synapses using Three.js and custom shaders. Reactivity to sound or scroll input optional.
+7.	Animated Route Transitions
+Implement Next.js route transitions with Framer Motion that animate page components sliding or fading in layers, maintaining smooth state persistence.
+8.	Liquid Metal Navbar
+Create a top navigation bar that ripples like liquid metal on hover using SVG filters and CSS feTurbulence effects.
+9.	Orbital Navigation Menu
+Develop a circular navigation UI where menu items orbit around a central logo. On hover, an item moves forward in 3D using R3F camera focus.
+10.	Dynamic Spotlight Hero
+Build a landing hero with a moving spotlight that follows the cursor, revealing hidden typography or symbols underneath a dark gradient overlay.
+11.	AI Control Panel Navigation
+Design a sidebar that feels like a futuristic dashboard. Use Framer Motion for card flips and ambient glowing borders triggered by active route state.
+12.	Layered Particle Depth
+Construct a Three.js particle system with multiple Z-depth layers moving at different scroll speeds for immersive parallax backgrounds.
+13.	Scroll-Synced 3D Model Hero
+Embed a 3D model (logo or product) in the hero. As the user scrolls, the camera rotates around it while ambient lighting and reflection shift in sync.
+14.	Aurora Gradient Background
+Build a full-width animated background using CSS gradients and noise blending to simulate aurora waves that flow dynamically.
+15.	AI Matrix Sidebar
+Create a collapsible sidebar with animated binary or hex code streams running behind icons, with soft blur and motion trails.
+16.	Fractal Particle Background
+Render an interactive fractal or noise-based particle animation as a background canvas using shaders. Make it respond to scroll, hover, or sound.
+17.	Micro-interaction Navbar
+Add micro animations to every button—icons morph smoothly when clicked, and labels glow briefly with color-coded feedback.
+18.	Parallax Depth Cards
+Build a section of floating cards with depth parallax. As you scroll, each card tilts and moves independently on its Z-axis for realism.
+19.	Responsive Command Bar
+Design a central command bar that pops up via hotkey (like Ctrl+K) and uses Framer Motion to search or navigate through routes with animated query results.
+20.	Cinematic Entry Sequence
+On initial load, trigger a GSAP timeline that fades in text, lights a particle background, and spins a central 3D emblem before resolving into the main page layout.
+Holographic Sidebar Matrix
+Design a holographic sidebar navigation in Next.js 14 using React Three Fiber and GSAP timelines. Each nav link should emit refracted light trails that fade into a matrix-style particle field. When expanded, the sidebar rotates slightly in 3-D space with smooth inertia and a parallax-driven background shader responding to cursor depth.
+2.	Cinematic Hero Portal
+Build a hero section where the camera travels through a rotating fractal gateway rendered in Three.js. Text layers drift forward using Framer Motion’s spring curves, and a volumetric-light shader reacts to scroll speed. Integrate Lenis for buttery smooth motion and a magnetic call-to-action button that subtly pulls toward the cursor.
+3.	Quantum Particle Navbar
+Create a floating top navigation bar suspended above a particle ocean built with GLSL noise. On hover, menu labels distort like refracted glass. Scrolling down compresses the particles into a glowing line that morphs into a progress bar reflecting scroll position.
+4.	Interactive Nebula Landing
+Develop a full-screen landing background using Three Fiber and custom shaders that render animated nebula clouds. Introduce depth via camera parallax and subtle Z-axis drift. As the user scrolls, constellations connect between UI elements forming navigation routes, fading when idle.
+5.	Fluid Command Console
+Construct an AI-themed control console interface where each panel slides in as liquid glass using GSAP clip-path morphing. The background pulses with sine-wave particles driven by a WebGL shader. Hovering over any module triggers ripple distortions that spread across the interface grid.
+6.	Chrono-Scroll Narrative
+Implement a storytelling site where scrolling advances time: sunrise to nightfall across a 3-D landscape. Use Three Fiber environmental maps, light transitions, and synchronized text reveals through Framer Motion. Add ambient sound layers triggered by scroll milestones.
+7.	Plasma Interface Grid
+Build a dashboard with plasma-style energy flowing beneath translucent tiles. Each tile has independent hover elevation using perspective transforms. The plasma motion follows pointer velocity, creating the illusion of current flow under the UI surface.
+8.	Zero-Gravity Hero Scene
+Render floating product components orbiting in zero gravity. Use React Three Fiber physics (cannon-es) and depth-of-field post-processing. As the user moves the cursor, the entire environment tilts with inertial damping, revealing new layers of information on hover.
+9.	Aurora Sidebar Interaction
+Develop a vertical navigation that emits aurora-like color waves whenever the user selects a link. Combine CSS mix-blend-mode and GSAP hue rotation for real-time light flow. Sidebar items should gently sway as if under magnetic fields.
+10.	Scroll-Triggered 3-D Path
+Create a timeline where the camera travels along a spline path through abstract architecture. Each section loads new content panels in sync with camera checkpoints. Blend GSAP ScrollTrigger with Three.js camera controls for film-level pacing.
+11.	Volumetric Particle Hero
+Construct a hero background of volumetric dust particles drifting in simulated depth. A single light beam follows the cursor like a spotlight, revealing hidden text via alpha masks. Blend WebGL bloom and motion blur for realism.
+12.	AI Neural Mesh
+Generate a moving neural network composed of connecting nodes. Each click sends an energy pulse across the mesh using GSAP stagger animations. The camera slightly rotates to maintain a sense of infinite depth.
+13.	Reactive Gradient Universe
+Build a shader-driven gradient field where colors evolve based on user idle time. When scrolling resumes, the gradient accelerates and emits particle sparks that fade upward, visually representing “energy release.”
+14.	Immersive Sidebar Reveal
+Develop a sidebar that doesn’t slide—it unfolds like origami using 3-D rotation and perspective distortion. Icons re-materialize with slight chromatic aberration, and background blur increases dynamically with depth.
+15.	Dynamic Terrain Intro
+Render procedural terrain in Three Fiber that deforms to the rhythm of ambient audio. As text headlines appear, the terrain morphs beneath them, syncing with beat detection for live motion integration.
+16.	Parallax Command Center
+Create a multi-layer parallax dashboard where each widget has individual Z-depth. Mouse movement alters camera offset subtly. Hovering on any widget locks camera position and brings that layer forward for interaction.
+17.	Cyber-Hologram Navbar
+Design a nav system composed of floating holographic panels projected from a central core logo. Each menu section appears with ray-casted light beams and retracts with particle dispersion.
+18.	Fractal Wave Background
+Implement a real-time shader generating animated fractal waves. Scroll speed modifies frequency and amplitude. Overlay translucent content panels that gently warp with the wave beneath.
+19.	Interactive Orbit Menu
+Build a 3-D orbital navigation: icons revolve around a planet-like logo. Clicking an icon zooms the camera along its orbit into the relevant page, then gracefully returns on exit.
+20.	Cognitive Landing Sequence
+On load, render a brain-like neural sculpture spinning slowly in ambient light. Text fades in synchrony with neuron pulses. Scrolling outward zooms into the network, transitioning seamlessly into main content while maintaining motion continuity.
+________________________________________
+Each prompt can be executed with your stack:
+Next.js 14 + TypeScript + Framer Motion + GSAP ScrollTrigger + React Three Fiber + GLSL shaders + Lenis smooth scroll.
+They’re long because they define scene logic, animation layers, and camera interaction — exactly the ingredients for cinematic, high-engagement UIs.
+Adaptive Motion Compression
+Implement adaptive animation scaling for mobile using Framer Motion and GSAP. Detect device width, GPU tier, and battery state to dynamically reduce motion complexity, blur passes, and particle counts. Maintain smooth parallax at 60 FPS while preserving cinematic hierarchy. Navigation auto-collapses into a radial thumb-reachable menu with haptic feedback through the Web Vibration API.
+2.	Gesture-Driven Navigation System
+Build a fully gesture-controlled mobile navigation overlay. Swipes open panels with inertial deceleration physics via GSAP Draggable. Menu items reorder based on thumb proximity. Sidebar transitions morph into a bottom-dock radial layout when switching to portrait orientation, ensuring consistent access across both hand-held positions.
+3.	Viewport-Responsive Shader Scaling
+Create a responsive Three Fiber scene where shader resolution and light intensity auto-scale with devicePixelRatio. Maintain consistent luminance and visual quality under reduced GPU power. Use media queries plus JavaScript performance observers to dynamically lower render-loop intensity on scroll-heavy mobile devices.
+4.	Context-Aware UI Density
+Design an AI-driven UI density manager that reflows components using CSS Clamp and React ResizeObserver. When the keyboard appears or the device orientation changes, the layout adjusts instantly without jank. Background effects pause during heavy input to conserve battery and ensure consistent 60 Hz input response.
+5.	Touch-Optimized Parallax
+Implement a parallax system that uses accelerometer and gyro data for motion cues instead of mouse movement. Add friction-based easing for a natural handheld feel. Disable camera tilt beyond 5° to prevent nausea and maintain fluid scroll momentum.
+6.	Elastic Viewport Scaling
+Build a dynamic viewport controller that recalculates safe-area insets and padding for every device (iOS Dynamic Island, Android Punch-Hole). Use CSS env variables with fallback clamps. The hero section resizes seamlessly without text overflow or clipped models during rotation or soft-keyboard events.
+7.	Low-Power Animation Fallbacks
+Integrate WebGL fallback detection. If GPU throttling is detected, replace shader-based particles with CSS or SVG equivalents. Maintain color grading consistency using precomputed LUT filters. Provide the same aesthetic with zero crashes on entry-level Androids.
+8.	One-Thumb Interaction Zones
+Engineer your hero and sidebar layouts around one-thumb ergonomics. Dynamic UI heatmaps identify unreachable areas and move high-priority controls to 40 % screen height. GSAP scroll triggers adjust anchor points for better thumb reach in portrait mode.
+9.	Orientation-Aware Layout Morphing
+Implement orientation listeners that fluidly morph the layout between portrait and landscape using Framer Motion transitions. When rotated, sidebars become bottom sheets, Three.js scenes re-center, and text re-wraps without reload or clipping. Maintain parallax continuity and smooth transition across both views.
+10.	Haptic-Synchronized Feedback Layer
+Combine Web Vibration API with Framer Motion. Each gesture, scroll end, or nav confirmation emits subtle haptic pulses mapped to animation curves. Ensures mobile interactions “feel” cinematic even when visual fidelity drops due to reduced performance scaling.
+________________________________________
+These prompts directly bridge desktop cinematic motion with mobile-grade usability, ensuring your designs stay immersive, responsive, and performant across every device orientation and power class.
+1. Languages and Frameworks
+These run the backend logic—APIs, bots, workers, schedulers.
+•	Python → FastAPI, Flask, Django, Celery (good for async jobs, finance logic, data science).
+•	Node.js / TypeScript → Express, NestJS (popular in Web3 and SaaS dashboards).
+•	Go (Golang) → used by fintechs (Coinbase, Stripe) for ultra-low-latency APIs and concurrency.
+•	Rust → the new wave. Used in Solana, zk-rollups, DeFi engines for safety + speed.
+•	Java / Kotlin → still the banking default (Spring Boot, Micronaut). Robust, thread-safe, enterprise-heavy.
+•	C++ → quant finance, high-frequency trading, exchange matching engines.
+Rule: the higher the money velocity, the lower-level the language.
+________________________________________
+2. Core Backend Architecture
+A serious backend = modular architecture, not one script.
+Layer	Function	Example Tech
+Gateway / API Layer	Routes user requests	FastAPI, Express, GraphQL
+Service Layer	Business logic	Python/Go/Rust modules
+Worker Layer	Asynchronous jobs	Celery, RabbitMQ, Kafka consumers
+Database Layer	Persistence	PostgreSQL, MongoDB, Redis, Cassandra
+Cache Layer	Speed buffer	Redis, Memcached
+Message Broker	Queueing and decoupling	RabbitMQ, Kafka, NATS
+Task Scheduler	Automation / cron	Celery beat, Airflow, Temporal
+Storage	Files, media, logs	AWS S3, GCS, MinIO, DigitalOcean Spaces
+________________________________________
+3. Databases
+•	SQL → PostgreSQL (most used in fintech). Structured, ACID-compliant, perfect for balances.
+•	NoSQL → MongoDB (flexible, JSON-like). Used for fast prototyping.
+•	Time-Series → InfluxDB, TimescaleDB (for prices, sensor data).
+•	Graph DB → Neo4j (for fraud networks, social connections).
+•	Ledger DB → AWS QLDB, Hyperledger, custom Postgres-based double-entry ledgers.
+Fintechs always log immutable ledgers → append-only data, no edits.
+________________________________________
+4. Communication Between Components
+Modern backends aren’t monoliths—they’re distributed:
+•	REST or GraphQL for standard APIs.
+•	gRPC (Google RPC) for high-speed microservice-to-microservice communication.
+•	WebSockets for real-time price updates.
+•	Kafka, NATS, or RabbitMQ for event-driven pipelines (trades, orderbook updates, signals).
+________________________________________
+5. Infrastructure & Scaling
+Where the backend lives and how it scales.
+•	Cloud Providers: AWS, GCP, Azure, DigitalOcean.
+•	Containers: Docker, Podman.
+•	Orchestration: Kubernetes (K8s), Docker Swarm.
+•	Serverless: AWS Lambda, Google Cloud Functions (good for auto-scaling API endpoints).
+•	Load Balancing: NGINX, Traefik, HAProxy.
+•	CI/CD: GitHub Actions, ArgoCD, Jenkins, CircleCI.
+________________________________________
+6. Observability & Reliability
+What makes a backend operationally alive.
+•	Monitoring: Prometheus, Grafana, Datadog.
+•	Logging: ELK Stack (Elasticsearch, Logstash, Kibana), Loki, Fluentd.
+•	Tracing: OpenTelemetry, Jaeger.
+•	Alerting: PagerDuty, Opsgenie, Slack bots.
+________________________________________
+7. Security / Compliance Layer
+Especially in fintech:
+•	Role-Based Access Control (RBAC).
+•	Encryption at rest (AES-256) and in transit (TLS 1.3).
+•	Web Application Firewalls (Cloudflare, AWS WAF).
+•	HSM (Hardware Security Module) for key custody.
+•	SOC 2 / PCI DSS / KYC / AML compliance pipelines.
+________________________________________
+8. AI + Analytics Integration
+Backend connects to ML layers:
+•	Pipelines: Airflow, Prefect, Dagster.
+•	Models served via: TensorFlow Serving, BentoML, FastAPI endpoints.
+•	Data lakes: BigQuery, Snowflake, S3 + Athena.
+________________________________________
+9. Example Fintech Backend Stack (Stripe-like)
+Component	Tool
+Language	Go + TypeScript
+API Gateway	GraphQL + gRPC
+Core Services	Microservices in Go
+Database	PostgreSQL + Redis
+Queue	Kafka
+Orchestration	Kubernetes
+Monitoring	Prometheus + Grafana
+Authentication	OAuth2 + JWT + Clerk
+Compliance	Ledger + Audit trail microservice
+________________________________________
+10. Higher than a Python Bot
+“Python bots” (like ATOM) are agents, not full backends.
+To go higher-level, you build:
+•	Distributed Service Mesh → multiple bots communicating via queues or APIs.
+•	Event-driven Architecture → triggers based on on-chain or price data.
+•	Autonomous Systems → orchestrators coordinating AI or trading logic (multi-agent systems).
+•	Serverless Pipelines → bots that scale up and die off automatically under load.
+That’s how banks, funds, and DeFi protocols operate: the “backend” is a living network of event-based, auto-scaling microservices running with failover logic and observability.
+________________________________________
+If you want next-level backend mastery, start layering:
+FastAPI → Celery → Redis → PostgreSQL → Kafka → Docker → Kubernetes → Prometheus.
+That’s a real production backbone — what powers exchanges, neobanks, and arbitrage systems.
+AEON Protocols can be positioned as an AI Operating Layer—a unified automation cloud that spans content, communication, commerce, and compliance. Here’s how to structure it to stay scalable, fundable, and unbeatable:
+________________________________________
+1. Core Philosophy
+AEON should not be “an app.” It’s a programmable economy. Every service—media generation, telephony, CRM, arbitrage, LLC registration—becomes a modular micro-agent connected through a unified event bus. The platform is the OS, not a feature.
+________________________________________
+2. Layered Architecture
+Layer	Purpose	Example Tech
+Interface Layer	Next.js 14 + Tailwind + Framer Motion for cinematic UI.	Vercel Frontend
+Execution Layer	FastAPI + gRPC + Redis Streams. Routes workloads between agents.	DigitalOcean or Hetzner
+AI Layer	Aggregates Replicate, OpenAI, Anthropic, ElevenLabs, and Runway endpoints.	“AEON Core Agents”
+Automation Layer	Event-driven pipeline (Kafka / NATS / Celery) orchestrating tasks across media, CRM, and telecom.	
+Persistence Layer	PostgreSQL (main), Redis (cache), MinIO/S3 (storage), Elastic (search), ClickHouse (analytics).	
+Integration Layer	Connects Twilio, GoHighLevel, Shopify, Stripe, Coinbase Commerce, and A2P APIs.	
+Governance Layer	Handles billing, auth (Clerk), role access, and AI credit metering.	Stripe + Supabase + Custom Ledger
+________________________________________
+3. Distributed Agent Ecosystem
+Each capability becomes a service agent:
+•	MEDIA-01 → Text-to-Video, Audio, Image pipelines (via Replicate + Runway).
+•	SOCIAL-02 → Scheduler, cross-poster, caption generator.
+•	CRM-03 → Contact sync, A2P verification, campaign orchestration.
+•	FIN-04 → Arbitrage engine (Python/Go bots, Aave/Curve integrations).
+•	OPS-05 → LLC/EIN automation via IRS API + DocuSign flow.
+•	DEV-06 → Code generation (v0.dev-like builder using LLM orchestration).
+All communicate through Kafka or Redis Streams with message schemas and audit trails.
+________________________________________
+4. Fintech-Grade Backend Standards
+If AEON touches payments, apply financial backend principles:
+•	Event sourcing with append-only ledgers (Postgres + WAL).
+•	Immutable job logs (audit microservice).
+•	API versioning + signed webhooks (HMAC + JWT).
+•	Rate-limited async endpoints (Celery + Redis TTLs).
+•	Observability: Prometheus + Grafana + OpenTelemetry tracing.
+________________________________________
+5. Cloud and Scaling
+Phase plan:
+1.	Dev Phase: DigitalOcean droplets (API, worker, DB, Redis).
+2.	Growth Phase: Docker Compose → Kubernetes (Hetzner Cloud + LoadBalancer).
+3.	Enterprise Phase: AEON Cloud with multi-tenant Helm charts, S3-compatible storage, and optional on-prem node deploys.
+4.	Monetization: Stripe for fiat, Ethereum (EVM) for AEON token credits.
+________________________________________
+6. Security & Compliance
+•	End-to-end TLS (Cloudflare + Let’s Encrypt).
+•	API key vaulting (HashiCorp Vault).
+•	AES-256 encryption for stored data.
+•	SOC 2 baseline: audit logging + least-privilege access.
+•	Twilio A2P & GDPR/CCPA automation for all message data.
+________________________________________
+7. Business Stack Integration
+AEON = Command center for creators, sellers, and agencies:
+•	Built-in RefaceKit-style video generator.
+•	CRM + Dialer powered by your Kixi/VICIdial hybrid.
+•	Lead capture & enrichment through integrated Seamless clone.
+•	AI scheduling via Calendar + Telegram/Discord hooks.
+•	LLC / EIN auto-filing → API-first legal formation module.
+________________________________________
+8. Future Frontier
+Once AEON reaches stable orchestration:
+•	Spin up AEON Cloud (multi-tenant compute).
+•	Introduce AEON AI Agents SDK—third parties build their own plug-in agents.
+•	Launch AEON Token → compute credits with staking for heavy workloads.
+•	Build AEON OS UI (SvelteKit dashboard) to visualize all pipelines in real time.
+________________________________________
+9. Reference Fintech-Media Stack
+Domain	Stack
+AI Media	FastAPI + Replicate + ffmpeg + Celery
+Arbitrage	Go backend + Web3.py + Flashbots + Redis MQ
+CRM	Node (NestJS) + Supabase + Twilio A2P
+Automation	NATS / Kafka events + Temporal.io orchestration
+AI Agent Layer	LangChain + OpenAI/Claude + Redis Vector
+Frontend	Next.js + ShadCN + Framer Motion + Clerk
+Infrastructure	Docker + K8s + Traefik + Prometheus + S3
+Monetization	Stripe + Coinbase Commerce
+Authentication	Clerk + JWT + OAuth2
+Analytics	ClickHouse + Grafana dashboards
+________________________________________
+10. Next Move
+Your next execution phases:
+1.	Lock architecture → define services and message schemas.
+2.	Start containerizing AEON Core, Media, CRM, and FIN agents.
+3.	Connect via Redis Streams and expose unified /trigger API gateway.
+4.	Add Observability + Billing Layer.
+5.	Deploy AEON v1 to Hetzner or DO K8s.
+________________________________________
+You’re building not “a site,” but a cloud OS for intelligent business infrastructure.
+Think: Vercel + GoHighLevel + Runway + Zapier + Stripe + OpenAI—but unified under one cognitive backbone.
+Yes. You’re building AEON OS: a programmable, multi-agent cloud that people use instead of typing. Here’s the shortest path to proof.
+Non-negotiables
+•	Single event bus: Redis Streams → Kafka later.
+•	Append-only ledger: Postgres + audit microservice.
+•	Unified auth/billing: Clerk + Stripe + on-chain credits.
+•	Observability from day 1: Prometheus + Grafana + OpenTelemetry.
+Minimal service map (v1)
+•	gateway-api (FastAPI): /trigger, /jobs, /ledger, signed webhooks.
+•	media-agent (workers): image/video/audio gen (Replicate/Runway/ffmpeg).
+•	social-agent: schedule + cross-post + A2P (Twilio).
+•	crm-agent: contacts, pipelines, enrichment, GHL sync.
+•	dialer-agent: Kixi-style power dial (Twilio Voice, queues).
+•	dev-agent: text-to-app scaffolder (Next.js presets).
+•	fin-agent: arbitrage executor (Go/Python), Flashbots, risk gates.
+•	legal-agent: LLC/EIN flows (forms + doc e-sign).
+•	audit-ledger: immutable events, HMAC verify.
+Jarvis (Vulpine) surfaces
+•	Browser: Chrome extension + floating command bar (Ctrl+Space), mic first, stream actions.
+•	Desktop: Electron overlay for global hotkeys.
+•	Mobile: PWA voice launcher; server executes, phone confirms.
+Repo layout
+/srv/aeon/
+  gateway-api/        # FastAPI, JWT, rate limit
+  agents/
+    media/
+    social/
+    crm/
+    dialer/
+    dev/
+    fin/
+    legal/
+  platform/
+    audit-ledger/
+    billing/
+    auth/
+  infra/
+    docker-compose.yml
+    k8s/
+  ui/
+    dashboard-next/
+    extension/
+Message schema (baseline)
+// stream: aeon.jobs
+{ "id":"ksnow", "agent":"media", "task":"video.generate",
+  "payload":{"scriptUrl": "...", "model":"runway"}, "user":"usr_...", "trace":"..."}
+// stream: aeon.events (append-only)
+{ "at":"2025-10-18T00:00:00Z", "type":"job.completed",
+  "ref":"ksnow", "cost_cents":142, "ms":18432, "ok":true }
+30-day MVP (ship order)
+1.	Gateway + Streams + Ledger (auth, HMAC, retries, quotas).
+2.	Jarvis Chrome extension (PTT mic → /trigger, live toasts).
+3.	Media agent: script→scenes→render→S3, webhook back to UI.
+4.	Social agent: Twitter/IG/YouTube schedule; A2P SMS test.
+5.	Dashboard: job queue, credits, invoices, logs.
+60-day adds
+•	Dialer agent (progressive: preview → power dial).
+•	Dev agent (scaffold Next app + deploy to Vercel).
+•	Legal agent (LLC/EIN wizard with doc vault).
+•	Fin agent (paper-trade route, then guarded live flag).
+90-day scale
+•	Kafka, Temporal (orchestration), ClickHouse analytics, multi-tenant “AEON Cloud” plans.
+Security gates
+•	Per-agent kill switch, budget caps, WAF, IP allowlists, scoped API keys, PII vaulting.
+Pricing spine
+•	Free: 50 credits + 1 workspace.
+•	Pro $49: 5k credits, scheduler, 3 surfaces.
+•	Scale $199: 50k credits, dialer, legal, priority.
+•	Enterprise: SSO, on-prem agent runner.
+KPIs (that matter)
+•	TTFX (voice → action) < 500 ms.
+•	Job success rate > 98%.
+•	Credit cost/job ↓ week-over-week.
+•	WAU speaking to Jarvis > 40% of MAU.
+•	MTTD/MTTR on failed jobs < 2m / < 10m.
+Risks to control
+•	Vendor drift (abstract model providers).
+•	A2P compliance (automate consent + opt-outs).
+•	Cost spikes (pre-quote, dry-run, circuit breakers).
+•	Data governance (tenant isolation + audit).
+One command to start (dev)
+docker compose -f infra/docker-compose.yml up -d redis minio postgres gateway workers
+You have the vision. Now make Jarvis the default input and events the only backend contract. Ship the voice→video→post loop first. Everything else plugs into the same bus.
+Yes. You’re building AEON OS: a programmable, multi-agent cloud that people use instead of typing. Here’s the shortest path to proof.
+Non-negotiables
+•	Single event bus: Redis Streams → Kafka later.
+•	Append-only ledger: Postgres + audit microservice.
+•	Unified auth/billing: Clerk + Stripe + on-chain credits.
+•	Observability from day 1: Prometheus + Grafana + OpenTelemetry.
+Minimal service map (v1)
+•	gateway-api (FastAPI): /trigger, /jobs, /ledger, signed webhooks.
+•	media-agent (workers): image/video/audio gen (Replicate/Runway/ffmpeg).
+•	social-agent: schedule + cross-post + A2P (Twilio).
+•	crm-agent: contacts, pipelines, enrichment, GHL sync.
+•	dialer-agent: Kixi-style power dial (Twilio Voice, queues).
+•	dev-agent: text-to-app scaffolder (Next.js presets).
+•	fin-agent: arbitrage executor (Go/Python), Flashbots, risk gates.
+•	legal-agent: LLC/EIN flows (forms + doc e-sign).
+•	audit-ledger: immutable events, HMAC verify.
+Jarvis (Vulpine) surfaces
+•	Browser: Chrome extension + floating command bar (Ctrl+Space), mic first, stream actions.
+•	Desktop: Electron overlay for global hotkeys.
+•	Mobile: PWA voice launcher; server executes, phone confirms.
+Repo layout
+/srv/aeon/
+  gateway-api/        # FastAPI, JWT, rate limit
+  agents/
+    media/
+    social/
+    crm/
+    dialer/
+    dev/
+    fin/
+    legal/
+  platform/
+    audit-ledger/
+    billing/
+    auth/
+  infra/
+    docker-compose.yml
+    k8s/
+  ui/
+    dashboard-next/
+    extension/
+Message schema (baseline)
+// stream: aeon.jobs
+{ "id":"ksnow", "agent":"media", "task":"video.generate",
+  "payload":{"scriptUrl": "...", "model":"runway"}, "user":"usr_...", "trace":"..."}
+// stream: aeon.events (append-only)
+{ "at":"2025-10-18T00:00:00Z", "type":"job.completed",
+  "ref":"ksnow", "cost_cents":142, "ms":18432, "ok":true }
+30-day MVP (ship order)
+1.	Gateway + Streams + Ledger (auth, HMAC, retries, quotas).
+2.	Jarvis Chrome extension (PTT mic → /trigger, live toasts).
+3.	Media agent: script→scenes→render→S3, webhook back to UI.
+4.	Social agent: Twitter/IG/YouTube schedule; A2P SMS test.
+5.	Dashboard: job queue, credits, invoices, logs.
+60-day adds
+•	Dialer agent (progressive: preview → power dial).
+•	Dev agent (scaffold Next app + deploy to Vercel).
+•	Legal agent (LLC/EIN wizard with doc vault).
+•	Fin agent (paper-trade route, then guarded live flag).
+90-day scale
+•	Kafka, Temporal (orchestration), ClickHouse analytics, multi-tenant “AEON Cloud” plans.
+Security gates
+•	Per-agent kill switch, budget caps, WAF, IP allowlists, scoped API keys, PII vaulting.
+Pricing spine
+•	Free: 50 credits + 1 workspace.
+•	Pro $49: 5k credits, scheduler, 3 surfaces.
+•	Scale $199: 50k credits, dialer, legal, priority.
+•	Enterprise: SSO, on-prem agent runner.
+KPIs (that matter)
+•	TTFX (voice → action) < 500 ms.
+•	Job success rate > 98%.
+•	Credit cost/job ↓ week-over-week.
+•	WAU speaking to Jarvis > 40% of MAU.
+•	MTTD/MTTR on failed jobs < 2m / < 10m.
+Risks to control
+•	Vendor drift (abstract model providers).
+•	A2P compliance (automate consent + opt-outs).
+•	Cost spikes (pre-quote, dry-run, circuit breakers).
+•	Data governance (tenant isolation + audit).
+One command to start (dev)
+docker compose -f infra/docker-compose.yml up -d redis minio postgres gateway workers
+You have the vision. Now make Jarvis the default input and events the only backend contract. Ship the voice→video→post loop first. Everything else plugs into the same bus.
+Yes. You’re building AEON OS: a programmable, multi-agent cloud that people use instead of typing. Here’s the shortest path to proof.
+Non-negotiables
+•	Single event bus: Redis Streams → Kafka later.
+•	Append-only ledger: Postgres + audit microservice.
+•	Unified auth/billing: Clerk + Stripe + on-chain credits.
+•	Observability from day 1: Prometheus + Grafana + OpenTelemetry.
+Minimal service map (v1)
+•	gateway-api (FastAPI): /trigger, /jobs, /ledger, signed webhooks.
+•	media-agent (workers): image/video/audio gen (Replicate/Runway/ffmpeg).
+•	social-agent: schedule + cross-post + A2P (Twilio).
+•	crm-agent: contacts, pipelines, enrichment, GHL sync.
+•	dialer-agent: Kixi-style power dial (Twilio Voice, queues).
+•	dev-agent: text-to-app scaffolder (Next.js presets).
+•	fin-agent: arbitrage executor (Go/Python), Flashbots, risk gates.
+•	legal-agent: LLC/EIN flows (forms + doc e-sign).
+•	audit-ledger: immutable events, HMAC verify.
+Jarvis (Vulpine) surfaces
+•	Browser: Chrome extension + floating command bar (Ctrl+Space), mic first, stream actions.
+•	Desktop: Electron overlay for global hotkeys.
+•	Mobile: PWA voice launcher; server executes, phone confirms.
+Repo layout
+/srv/aeon/
+  gateway-api/        # FastAPI, JWT, rate limit
+  agents/
+    media/
+    social/
+    crm/
+    dialer/
+    dev/
+    fin/
+    legal/
+  platform/
+    audit-ledger/
+    billing/
+    auth/
+  infra/
+    docker-compose.yml
+    k8s/
+  ui/
+    dashboard-next/
+    extension/
+Message schema (baseline)
+// stream: aeon.jobs
+{ "id":"ksnow", "agent":"media", "task":"video.generate",
+  "payload":{"scriptUrl": "...", "model":"runway"}, "user":"usr_...", "trace":"..."}
+// stream: aeon.events (append-only)
+{ "at":"2025-10-18T00:00:00Z", "type":"job.completed",
+  "ref":"ksnow", "cost_cents":142, "ms":18432, "ok":true }
+30-day MVP (ship order)
+1.	Gateway + Streams + Ledger (auth, HMAC, retries, quotas).
+2.	Jarvis Chrome extension (PTT mic → /trigger, live toasts).
+3.	Media agent: script→scenes→render→S3, webhook back to UI.
+4.	Social agent: Twitter/IG/YouTube schedule; A2P SMS test.
+5.	Dashboard: job queue, credits, invoices, logs.
+60-day adds
+•	Dialer agent (progressive: preview → power dial).
+•	Dev agent (scaffold Next app + deploy to Vercel).
+•	Legal agent (LLC/EIN wizard with doc vault).
+•	Fin agent (paper-trade route, then guarded live flag).
+90-day scale
+•	Kafka, Temporal (orchestration), ClickHouse analytics, multi-tenant “AEON Cloud” plans.
+Security gates
+•	Per-agent kill switch, budget caps, WAF, IP allowlists, scoped API keys, PII vaulting.
+Pricing spine
+•	Free: 50 credits + 1 workspace.
+•	Pro $49: 5k credits, scheduler, 3 surfaces.
+•	Scale $199: 50k credits, dialer, legal, priority.
+•	Enterprise: SSO, on-prem agent runner.
+KPIs (that matter)
+•	TTFX (voice → action) < 500 ms.
+•	Job success rate > 98%.
+•	Credit cost/job ↓ week-over-week.
+•	WAU speaking to Jarvis > 40% of MAU.
+•	MTTD/MTTR on failed jobs < 2m / < 10m.
+Risks to control
+•	Vendor drift (abstract model providers).
+•	A2P compliance (automate consent + opt-outs).
+•	Cost spikes (pre-quote, dry-run, circuit breakers).
+•	Data governance (tenant isolation + audit).
+One command to start (dev)
+docker compose -f infra/docker-compose.yml up -d redis minio postgres gateway workers
+You have the vision. Now make Jarvis the default input and events the only backend contract. Ship the voice→video→post loop first. Everything else plugs into the same bus.
+AEON Full UI + Animations + Auth + Dashboard + 3D Prompts Glossary
+Developer UI Prompt Library
+1. Hero Section Prompts
+•	"Create a high contrast hero with glass UI cards, left text block, right autoplay product video, bold CTA aligned bottom left. Include scroll indicator. No carousels."
+•	"Implement animated gradient headline text with 1.5s fade up entrance and staggered word reveal."
+•	"Responsive breakpoint rules: stack to vertical under 1024px, maintain full bleed edge to edge media."
+2. Navigation Prompts
+•	"Sticky top navigation with active route underline animation. Minimal links + auth button."
+•	"Include dark/light mode toggle using class strategy not media queries."
+•	"Add search modal triggered by CMD+K or magnifier icon."
+3. Animation System Prompts
+•	"Use Framer Motion for page transitions: fade+slide up 25px. 300ms duration. No bounce."
+•	"Hover micro animations: 1.03 scale on interactive cards, 0.95 press state."
+•	"Scroll reveal: opacity 0→1 and Y 20px→0 with small stagger groups."
+4. Dashboard Layout Prompts
+•	"Grid layout with metric cards top, logs panel bottom, control sidebar right. Must remain adaptive for mobile."
+•	"Live WebSocket status badge top right: pulse when connected."
+•	"Bot action toggles with clear RUN/STOP color coding."
+5. Authentication UI Prompts
+•	"Clerk modal login only. No wallet buttons on homepage. Redirect to /dashboard after login."
+•	"Branded auth screens with AEON color rules and subtle background motion."
+6. Data Visualization Prompts
+•	"Metric cards with simple linear trend sparkline. Auto format USD and percentages."
+•	"Real time event feed with timestamps sorted desc. Auto scroll lock override."
+7. 3D + Avatar Prompts
+•	"Embed GLTF fox avatar in hero. Idle breathing animation. Light orbit control disabled."
+•	"Low impact WebGL scene. Fall back to static PNG on low power devices."
+8. Forms + Validation Prompts
+•	"Two step form with inline error labels. Soft shake animation on invalid submit."
+•	"Success state auto redirect with lightweight confetti effect."
+9. Pricing + Feature Blocks
+•	"3 column pricing table with centered featured tier. Toggle monthly/annual."
+•	"Feature comparison grid with check icons and tooltip definitions."
+10. Footer Prompts
+•	"Minimal footer. Sitemap links left. Social icons right. Copyright center."
+11. Glassmorphism + Shader Prompts
+•	"Dynamic glass panels with backdrop-filter: 24px blur. Opacity curve on scroll: 0.6→0.8."
+•	"Three.js scene under UI with gradient fog and low-poly drift objects. CPU budget under 10%."
+•	"Mouse parallax on cards using GPU transform. Max tilt 6deg. Reset on mouseleave."
+•	"Shadered highlight edges on hover. Uniform-driven color mapped to brand accent."
+•	"Chromatic aberration post-processing at 0.003 intensity for depth."
+12. Advanced Motion Prompts
+•	"Route transitions tied to velocity: faster scroll reduces animation duration."
+•	"Motion sync with user input. Cursor ripple effect with falloff and blur kernel."
+•	"Magnetic buttons that attract pointer by 10px vector pull."
+13. Neural UI + Predictive Interactions
+•	"Adaptive UI: prioritize components user interacts with most. Auto-surface."
+•	"Predictive load of likely next route using intersection observer signals."
+•	"Micro-recommendation prompts inside dashboard using usage analytics."
+14. Cinematic Backgrounds
+•	"WebGL fractal noise background. Low-frequency motion. Linked to scroll position."
+•	"Dynamic lighting in hero. Spotlights track cursor path at 0.7 lag."
+•	"Depth parallax with dual render layers. UI always top depth: 999."
+15. Audio-reactive Visuals
+•	"Optional audio input for animated waveform beneath login. 30fps cap."
+•	"Metric pulses match notification SFX amplitude envelope."
+16. Avatar + Face Rig Prompts
+•	"Fox avatar blendshapes. Idle animation + subtle ear twitch every 12s."
+•	"Lip sync only on demo pages. Fallback: static pose on low-power devices."
+17. Holographic Effects
+•	"Fresnel shader for hologram cards. Edge brightness 2.5x base."
+•	"Scanline overlay every 8s. Soft opacity. Not visible in screenshots."
+18. Time of Day Mode
+•	"Gradient background shifts based on user local time. Dawn→Noon→Night palette."
+•	"Stars fade in after 9pm user local. GPU particle field with max 1500 points."
+19. Zero-Latency Feedback Prompts
+•	"Optimistic UI for toggles: UI updates instantly while backend confirms."
+•	"Socket presence indicator with connection retry countdown."
+20. Sensory Minimalism Fallbacks
+•	"Auto-disable shaders on mobile < 4GB RAM. Swap to static compressed background."
+•	"Reduced motion pref respected: disable parallax and magnetic effects."
+________________________________________
+Reply when ready for next batch: AI Agents UI + Logs + Settings + Notifications prompts.
+🔹 Core Mobile Optimization Prompts
+1.	Adaptive Motion Compression
+“Implement adaptive animation scaling for mobile using Framer Motion and GSAP. Detect device width, GPU tier, and battery state to dynamically reduce motion complexity, blur passes, and particle counts. Maintain 60 FPS parallax and auto-collapse navigation into a radial thumb-reachable menu using Web Vibration API.”
+2.	Gesture-Driven Navigation System
+“Build a fully gesture-controlled mobile navigation overlay. Swipes open panels with inertial deceleration via GSAP Draggable. Menu items reorder by thumb proximity and morph into a bottom-dock radial layout in portrait.”
+3.	Viewport-Responsive Shader Scaling
+“Create a responsive Three Fiber scene where shader resolution and lighting scale with devicePixelRatio. Use performance observers to lower render intensity on scroll-heavy devices.”
+4.	Context-Aware UI Density
+“Reflow components with CSS Clamp + ResizeObserver. Pause background effects during keyboard input or orientation change to keep 60 Hz input response.”
+5.	Touch-Optimized Parallax
+“Replace mouse-based motion with accelerometer/gyro data. Add friction easing and cap tilt at 5°.”
+6.	Elastic Viewport Scaling
+“Recalculate safe-area insets for iOS Dynamic Island and Android Punch-Hole. Use CSS env vars with clamps so heroes never clip on rotation.”
+7.	Low-Power Animation Fallbacks
+“Detect GPU throttling; swap WebGL particles for CSS/SVG equivalents while preserving LUT color grading.”
+8.	One-Thumb Interaction Zones
+“Shift primary controls to 40 % screen height; anchor GSAP ScrollTriggers for thumb reach.”
+9.	Orientation-Aware Layout Morphing
+“Morph portrait ↔ landscape layouts with Framer Motion transitions; sidebars become bottom sheets.”
+10.	Haptic-Synchronized Feedback Layer
+“Use Web Vibration API pulses mapped to animation curves so gestures feel tactile even on low-visual devices.”
+________________________________________
+🔹 Add-Ons from the Same Doc
+Use these for polish:
+•	Low-impact WebGL fallback — swap 3D scenes for static PNGs below 4 GB RAM.
+•	Responsive grid dashboards — grid + ResizeObserver; auto-collapse sidebar.
+•	Magnetic buttons / micro-interactions — short-range easing for touch feedback.
+•	Reduced-motion mode — respect prefers-reduced-motion, disable parallax.
+________________________________________
+🔹 Stack Reference
+Next.js 14 + TypeScript + Framer Motion + GSAP ScrollTrigger + React Three Fiber + GLSL + Lenis
+
+________________________________________
+🔹 UNIVERSAL RESPONSIVE BASELINES (1–5)
+Full Responsive Frame
+“Build a fully responsive Next.js 14 + Tailwind layout that scales perfectly from 320px to 1920px width. Maintain exact proportions, prevent text overflow, and use flex + grid + clamp() units for adaptive sizing.”
+1.	Auto-Scaling Typography
+“Use CSS clamp() for every font-size and spacing unit so text adjusts proportionally on phones, tablets, and desktops without breaking the layout.”
+2.	Viewport & Safe-Area Ready
+“Set meta viewport correctly and account for iOS Dynamic Island / Android punch-holes using env(safe-area-inset-*) padding. No clipping on any device.”
+3.	Adaptive Layout Grid
+“Use Tailwind responsive breakpoints sm, md, lg, xl and define explicit grid-template rules for each breakpoint to preserve proportions.”
+4.	Fluid Containers
+“All containers should have max-w-[100vw], overflow-hidden, and responsive p-[clamp(1rem,2vw,3rem)]. Prevent horizontal scrollbars on mobile.”
+________________________________________
+🔹 NAVIGATION + SIDEBAR (6–10)
+6.	Sticky Responsive Navbar
+“Design a sticky top navbar that collapses into a hamburger on screens <1024px. Use Framer Motion for slide-down animation and maintain brand logo scaling.”
+7.	Animated Mobile Menu
+“On mobile, replace horizontal nav links with a full-screen overlay menu triggered by a hamburger icon. Animate open/close using GSAP or Framer Motion spring easing.”
+8.	Bottom Dock Nav for Phones
+“Add a mobile-only bottom navigation dock (like iOS tab bar) with 4 icons. Highlight active route. Use fixed bottom-0 w-full flex justify-around bg-[#0a0a0a80] backdrop-blur.”
+9.	Responsive Sidebar
+“Create a collapsible sidebar that auto-hides below 1024px. When hidden, replace it with a floating button to reopen. On mobile, make it slide in from left with blur backdrop.”
+10.	Off-Canvas Menu Fallback
+“When in portrait mode, replace left sidebar with off-canvas drawer using Framer Motion x transitions. Close automatically when a link is tapped.”
+________________________________________
+🔹 MOBILE-FRIENDLY COMPONENTS (11–15)
+11.	Touch Zones & Tap Targets
+“Ensure every button or icon has min-h-[48px] min-w-[48px] touch area and hover states replaced by active transitions for mobile.”
+12.	Elastic Drawer for Sidebar
+“Sidebar should drag-open/close with GSAP Draggable or Framer Motion gestures. Include inertia and auto-snap for one-hand use.”
+13.	Tablet Split-View
+“For tablet viewports, show sidebar + content side-by-side. For phones, collapse sidebar and overlay when opened.”
+14.	Responsive Dashboard Layout
+“Dashboard grid auto-stacks to one column under 768px. Sidebar collapses. Header shrinks to icon-only. Preserve content hierarchy.”
+15.	Fixed Command Bar
+“Add bottom command bar for quick actions on mobile. Should hide on scroll down and reappear on scroll up.”
+________________________________________
+🔹 VISUAL + PERFORMANCE (16–20)
+16.	Adaptive Animation Scaling
+“Reduce motion complexity automatically on mobile by halving particle counts and transition durations when window.innerWidth < 768.”
+17.	GPU/Memory Detection
+“Detect device GPU tier; disable 3D scenes if on low-tier mobile. Replace with static background image fallback.”
+18.	One-Thumb Reach Design
+“Move critical buttons and CTAs between 35–60% of screen height so they’re thumb-reachable in portrait mode.”
+19.	Orientation-Aware Layout
+“Use CSS orientation media queries + JS listeners to smoothly morph layout between portrait (bottom nav) and landscape (side nav).”
+20.	Perfect Scaling QA
+“Before finalizing, simulate viewport widths 320, 375, 414, 768, 1024, 1366. Ensure all components scale, sidebars appear, no clipped elements.”
+________________________________________
+If you only want five master prompts that cover everything for fast reuse, use this bundle:
+“Build a Next.js + Tailwind + Framer Motion layout that is 100% responsive across mobile, tablet, and desktop. Sidebar converts to slide-in drawer below 1024px. Top navbar collapses to hamburger. Buttons use min 48px touch zones. Text and spacing use CSS clamp(). Hero and dashboard components maintain proportion at all breakpoints. Include safe-area padding for iOS and Android devices.”
+
+
+
+
+
+Stack assumption: Next.js 14 + Tailwind + Framer Motion + React Three Fiber + GSAP + Lenis.
+________________________________________
+🔹 HERO + LANDING SEQUENCES (1 – 6)
+Cinematic Scroll Hero
+“Create a 3-D parallax hero where the camera flies through floating typography, logos, and nebula fog as the user scrolls.”
+1.	Fractal Gateway Intro
+“Render a rotating fractal tunnel in Three.js; as the viewport loads, text emerges from light shafts timed with GSAP ScrollTrigger.”
+2.	Aurora Glass Hero
+“Layer translucent glass panels over animated aurora gradients; title text refracts light via CSS mix-blend-mode.”
+3.	Orbital Logo Entrance
+“Animate the brand mark orbiting around its tagline using R3F physics; glow trail fades on scroll.”
+4.	Zero-Gravity Product Reveal
+“Show components floating in slow rotation; scroll brings them into focus one by one with depth-of-field blur.”
+5.	Reactive Spotlight Title
+“Add a moving spotlight that follows cursor, revealing hidden metallic typography beneath a matte layer.”
+________________________________________
+🔹 NAVIGATION + MENUS (7 – 10)
+7.	Holographic Nav Overlay
+“Full-screen nav opens with a 3-D folding animation; each link emits refracted light streaks.”
+8.	Magnetic Dock Bar
+“Bottom navigation icons curve toward the cursor; hover inertia simulated with GSAP physics.”
+9.	Neon Grid Sidebar
+“Vertical nav composed of luminous grid cells; active route pulses like an equalizer.”
+10.	Orbit Menu System
+“Circular navigation where items orbit a core logo; clicking zooms the camera toward the selected planet-style section.”
+________________________________________
+🔹 BACKGROUNDS + ENVIRONMENTS (11 – 15)
+11.	Shader-Driven Particle Universe
+“Full-screen shader with swirling particles reacting to scroll speed and pointer velocity.”
+12.	Dynamic Plasma Field
+“Canvas background renders slow-moving plasma waves that follow pointer heatmaps.”
+13.	Fractal Noise Gradient
+“Animated fractal noise blended with brand palette; subtle drift synced to scroll.”
+14.	AI Neural Mesh
+“Network of nodes and lines pulsing with energy; click sends GSAP energy pulses across mesh.”
+15.	Cosmic Depth Layers
+“Stack three WebGL layers moving at different Z-speeds to simulate infinite cosmic depth.”
+________________________________________
+🔹 DASHBOARD + CONTROL PANELS (16 – 20)
+16.	Cyber-Control Interface
+“Responsive control center with glowing tiles and oscillating waveforms in the background Canvas layer.”
+17.	Glassmorphic Metrics Grid
+“Metric cards with 24 px backdrop blur; hover lifts card in 3-D with light refraction edge.”
+18.	Dynamic Parallax Dashboard
+“Each widget on dashboard has its own depth; mouse motion subtly shifts camera perspective.”
+19.	Holographic Sidebar Matrix
+“Sidebar rotates slightly in 3-D; icons leave fading particle trails; expands smoothly with inertia.”
+20.	Command Console UI
+“Panels slide in like liquid glass using clip-path morphs; ripple distortion spreads across grid when hovered.”
+________________________________________
+🔹 INTERACTION + MOTION (21 – 25)
+21.	Gesture-Reactive Layers
+“Mobile gestures trigger elastic deformations in UI panels using Framer Motion spring physics.”
+22.	Magnetic Button Physics
+“Buttons attract pointer within 10 px radius; on click, emit shockwave ripple with blur kernel.”
+23.	Scroll-Synced Timeline
+“Storyline advances as you scroll; GSAP timeline coordinates text, video, and 3-D camera checkpoints.”
+24.	Liquid Metal Navbar
+“Navbar ripples like mercury using SVG feTurbulence filters; reflections adjust on hover.”
+25.	Audio-Reactive Elements
+“Connect mic input to animate waveform and particle intensity; subtle SFX beat pulses UI glow.”
+________________________________________
+🔹 BRAND + AESTHETIC MODES (26 – 30)
+26.	Time-of-Day Palette Shift
+“Background gradient changes from dawn to night based on user local time; stars fade in after 9 PM.”
+27.	Retro-Futurism Mode
+“Combine scanlines, CRT bloom, and pixel grid textures for synthwave ambience; smooth color cycling neon palette.”
+28.	Minimal Noir Mode
+“Pure black background, monochrome typography, slow ambient glow underlines—cinematic and quiet.”
+29.	Hologram Overlay Effect
+“Fresnel shader edges glow 2.5×; transparent scanlines pass every 8 s.”
+30.	Cognitive Loading Sequence
+“Brain-like neural sculpture spins while loading; neuron pulses sync with logo reveal before routing to homepage.”
+________________________________________
+Usage pattern
+“Build a [component or page type] using [stack]. Apply prompt #X styling and interaction principles.”
+
+
+AEON — UNIFIED THREE.JS / R3F PROMPT VAULT
+Purpose: One continuous, copy pasteable flow for building cinematic Three.js / React Three Fiber web experiences with AI builders (Windsurf, v0, Cursor, Augment, Claude, GPT).
+No sections to hunt. No theory. Just execution.
+________________________________________
+MASTER BOOTSTRAP PROMPT (ALWAYS PREPEND)
+Build a high end cinematic web experience using:
+Next.js 14 + TypeScript + TailwindCSS + Framer Motion + GSAP ScrollTrigger + React Three Fiber + Drei + Lenis.
+Rules:
+•	Intentional motion only, no gimmicks
+•	Scroll driven camera + animation sync
+•	Layered depth with 3D + UI separation
+•	Mobile aware performance scaling
+•	Low power fallbacks for WebGL
+•	Apple / AITech / Linear level polish
+________________________________________
+GLOBAL EXPERIENCE RULES
+•	Use Lenis for smooth scrolling and pipe scroll position into GSAP + R3F
+•	All 3D scenes render inside with demand based frameloop when idle
+•	Disable orbit controls unless explicitly requested
+•	Respect prefers reduced motion
+•	Auto swap WebGL scenes for static PNG below 4 GB RAM
+•	Cap mobile particle counts and shader resolution dynamically
+________________________________________
+HERO + LANDING EXPERIENCE PROMPTS
+Create a cinematic hero where a Three.js camera slowly pans through floating typography, symbols, or a GLB model as the user scrolls. Sync camera position and lighting to GSAP ScrollTrigger. Headline fades in with Framer Motion staggered word reveal.
+Embed a GLB (fox / logo / product) using React Three Fiber. Idle breathing animation only. As scroll progresses, rotate the camera around the model while reflections and ambient light shift subtly. No user controls.
+Render a portal / fractal gateway scene using shader materials. On page load, camera moves forward through the tunnel. Text emerges from depth using spring curves. Motion slows as the hero resolves.
+Add a cursor driven spotlight reveal over matte typography. Spotlight follows cursor with inertia. Alpha mask reveals metallic text beneath dark overlay.
+________________________________________
+THREE.JS / R3F SCENE PROMPTS
+Build a volumetric particle universe with particles orbiting a central object. Particles respond to scroll speed and pointer velocity. Use additive blending and depth based fade.
+Generate a neural mesh of nodes and lines. Clicking a node sends an energy pulse across the network using GSAP stagger. Camera drifts slowly to imply infinite depth.
+Create layered Z depth particle fields moving at different scroll rates to simulate parallax space. UI always remains top layer.
+Render procedural terrain that subtly deforms based on scroll or ambient audio amplitude. Lighting transitions with scroll milestones.
+________________________________________
+SCROLL + MOTION SYSTEM PROMPTS
+Implement GSAP ScrollTrigger timelines controlling:
+•	Camera position
+•	Model rotation
+•	Light intensity
+•	Text opacity and translation
+Use Framer Motion for UI level transitions only (page load, hover, route changes). No overlapping animation responsibilities.
+Add magnetic cursor physics to buttons. Pointer attracts within 10 px radius with inertial easing. On click, emit ripple distortion.
+Create scroll synced storytelling where each scroll section advances a timeline checkpoint controlling 3D camera, background, and text layers.
+________________________________________
+NAVIGATION + UI DEPTH PROMPTS
+Design a holographic navigation overlay that opens with 3D folding animation. Menu items float slightly in Z space and respond to cursor parallax.
+Build a collapsible sidebar with a Three.js particle background. Sidebar rotates subtly in 3D when expanded. Icons emit light trails on hover.
+Create an orbital navigation menu where items revolve around a central logo. Clicking an item moves the camera along its orbit into the target section.
+________________________________________
+DASHBOARD + CONTROL PANEL PROMPTS
+Build a futuristic dashboard with glassmorphic tiles. Each tile lifts in 3D on hover with light refraction edges. Background uses low frequency shader motion.
+Implement a control panel where panels slide in like liquid glass using GSAP clip path morphing. Hover triggers ripple distortion across grid.
+Add live status indicators with pulsing glow synced to WebSocket state.
+________________________________________
+BACKGROUND + SHADER PROMPTS
+Create a full screen WebGL background with animated fractal noise and gradient drift. Motion tied to scroll velocity.
+Implement a Fresnel edge shader for holographic cards. Edge brightness 2.5× base color. Subtle scanlines every 8 seconds.
+Add chromatic aberration post processing at low intensity (≤0.003) for depth without distraction.
+________________________________________
+MOBILE + PERFORMANCE PROMPTS
+Implement adaptive motion compression. Detect device width, GPU tier, and battery state. Reduce particle counts, blur passes, and shader resolution dynamically.
+Replace mouse parallax with gyro/accelerometer input on mobile. Cap tilt at 5°. Add friction easing.
+Pause background effects during keyboard input or orientation change. Maintain 60 Hz input response.
+Swap WebGL scenes for static images when GPU throttling is detected. Preserve color grading with LUT filters.
+________________________________________
+ROUTING + TRANSITION PROMPTS
+Implement Next.js route transitions using Framer Motion. Fade + slide 20 px. Maintain shared layout state for persistent 3D scenes.
+Preload likely next routes using IntersectionObserver signals to avoid visual hitching.
+________________________________________
+AUDIO + SENSORY PROMPTS
+Optional audio reactive visuals: mic input drives waveform or particle intensity. Cap at 30 fps. Disable on mobile low power mode.
+Add subtle haptic feedback via Web Vibration API synced to scroll endpoints and primary interactions.
+________________________________________
+FINAL USAGE PATTERN
+"Using the AEON Unified Three.js Prompt Vault, build a [page / component / experience] following the cinematic rules above. Prioritize scroll driven camera motion, layered depth, and performance aware execution."
+________________________________________
+This document is the single source of truth for all AEON / Vulpine / cinematic 3D web builds.
+________________________________________
+EXTENSION — ADVANCED / RARE / EDGE-CASE PROMPTS (CONTINUOUS FLOW)
+Create a scroll-locked cinematic intro where user scroll is temporarily captured. Camera advances through a 3D scene while UI text sequences resolve. Release scroll only after final frame resolves.
+Build a split-depth hero where foreground UI scrolls normally but background 3D scene scrolls at 0.35x speed, creating temporal parallax.
+Implement a persistent Three.js scene that survives route changes using shared layout state. Camera and lights subtly recompose per route without reinitializing WebGL.
+Create a morphing geometry sequence where a logo mesh smoothly interpolates between multiple symbolic forms using vertex shader displacement.
+Build a light-field illusion using layered planes with slightly offset textures to simulate depth without heavy geometry.
+Implement camera dolly zoom (Vertigo effect) tied to scroll velocity for dramatic emphasis moments.
+Create a particle typography system where headline text is rendered as particles that disperse on scroll and reform on idle.
+Implement shader-driven liquid distortion under UI cards that reacts to pointer velocity and scroll acceleration.
+Build a ghost-trail cursor where pointer leaves a fading spline path rendered via Three.js line geometry.
+Create a heat-map interaction layer where frequently hovered UI regions glow more intensely over time.
+Implement time-based scene evolution: visuals subtly change the longer a user remains idle on the page.
+Build a procedural constellation map where UI elements are nodes connected dynamically by animated lines.
+Create a cinematic "focus pull" effect where depth-of-field shifts to foreground text when scrolling pauses.
+Implement negative space lighting where darkness is treated as a design element, revealing only what matters.
+Build a UI destruction transition where elements break into particles and reassemble on route change.
+Create a scroll-driven color grading pipeline using LUT interpolation between sections.
+Implement a holographic scan pass that sweeps across the screen every 10–15 seconds, barely perceptible.
+Build a zero-input ambient mode: if no interaction for 8s, camera drifts, lights dim, motion slows.
+Create a physics-based floating UI system where cards gently repel each other using verlet integration.
+Implement scene memory: returning users see slightly evolved visuals based on prior visits.
+Build a procedural noise mask that subtly warps typography edges for organic feel.
+Create a cinematic "reveal by occlusion" where objects pass in front of text to reveal it.
+Implement scroll-pressure mapping: fast scroll exaggerates motion, slow scroll dampens it.
+Build an infinite corridor illusion using repeating geometry and camera recycling.
+Create a holographic wireframe mode toggle for power users.
+Implement adaptive exposure control: lighting auto-adjusts based on background brightness.
+Build UI elements that cast fake shadows into the 3D scene for cohesion.
+Create a shader-based rain, dust, or snow system that never visually loops.
+Implement an accessibility-aware cinematic mode that simplifies visuals without breaking narrative.
+Build a dynamic vignette that tightens during focus moments and relaxes during exploration.
+Create a depth-aware tooltip system that emerges from the Z-plane of the element.
+Implement motion debt logic: accumulated motion energy dissipates gradually instead of snapping.
+Build a scene-driven CTA that only activates once the narrative completes.
+Create a cinematic exit sequence when the user leaves the page or tab.
+Implement multi-pass rendering for selective glow and bloom isolation.
+Build a parallax typography stack where each word exists on its own Z-plane.
+Create a dynamic fog system that reacts to scroll speed and pointer proximity.
+Implement shader-based edge highlights that appear only at grazing camera angles.
+Build a brand-symbol constellation that subtly rearranges itself each visit.
+Create a scroll-synced camera roll for subtle cinematic disorientation.
+Implement UI inertia: elements slightly lag behind scroll and catch up naturally.
+Build a silent narrative soundtrack system driven by interaction intensity (visual-only cues).
+Create a volumetric light shaft system that aligns with typography strokes.
+Implement time-dilated animations during critical narrative beats.
+Build a layered reflection system where UI reflects into the 3D world faintly.
+Create a procedural background that is mathematically unique per session.
+Implement GPU budget awareness: dynamically disable expensive effects when frame time exceeds threshold.
+Build a "director's cut" debug mode that visualizes camera paths and animation curves.
+Create an invisible interaction lattice that snaps cursor movement to cinematic paths.
+Implement scene checkpoints with soft snap-back if user scrolls too fast.
+Build an entropy-based animation system where randomness decreases as narrative resolves.
+Create a cinematic silence moment: motion pauses briefly to emphasize a message.
+Implement a visual heartbeat: subtle global pulse synced across all animations.
+Build a recursive visual motif that appears across sections in different forms.
+Create a dimensional handoff where UI transitions from flat to 3D and back.
+Implement a scroll-driven time scrubber controlling the entire scene timeline.
+Build a latent anticipation system: elements subtly prepare before entering view.
+Create a final-resolution settling animation where everything locks perfectly into place.
+________________________________________
+END OF PROMPT VAULT EXTENSION
+________________________________________
+SHADER-ONLY PROMPT VAULT — GLSL MENTAL MODELS (NO CODE)
+Think in fields, not objects. Every shader is a mathematical field evolving over time.
+Design shaders as signals: time, scroll velocity, pointer proximity, audio amplitude.
+Treat color as energy, not decoration. Brighter = closer, louder, more important.
+Use noise as structure, not randomness. Low-frequency noise for mood, high-frequency for detail.
+Layer shaders the way film layers light: base gradient → noise → distortion → highlights.
+Prefer illusion over geometry: fake depth with parallaxed UV offsets before adding meshes.
+Animate parameters, not pixels. All motion comes from uniforms evolving smoothly.
+Scroll should stretch space, not translate it. Warp coordinates instead of moving objects.
+Darkness is a shader too. Control absence of light intentionally.
+Never loop obviously. Phase-shift noise domains so repetition is mathematically unlikely.
+Use fresnel edges to imply intelligence and presence.
+Treat alpha as narrative pacing: reveal, conceal, resolve.
+________________________________________
+FOX-SPECIFIC PROMPT VAULT — PERSONALITY, IDLE, AR HANDOFF
+Fox idle behavior should feel alive but restrained. Breathing, ear flicks, tail micro-motions.
+Idle loop variance: no two idle cycles identical. Introduce subtle randomness.
+Fox attention system: head and eyes subtly orient toward cursor or active UI.
+Fox curiosity mode: on hover, lean forward slightly, ears perk.
+Fox confidence pose: chest forward, tail relaxed, minimal motion.
+Fox thinking state: slow head tilt, ear twitch cadence changes.
+Fox idle timeout: after 8–12 seconds, shift weight or change stance.
+Fox AR handoff prompt: when entering AR, Fox acknowledges transition with look toward camera.
+AR continuity rule: Fox pose and lighting match web scene before handoff.
+Fox greeting animation only once per session.
+Fox farewell animation triggered on exit intent.
+Fox never loops like a GIF — always breathes.
+________________________________________
+CONVERSION-WEAPONIZED MOTION PROMPTS
+Motion exists to guide attention, not impress.
+CTAs should activate after narrative completion, not immediately.
+Use anticipation: CTA subtly prepares (glow, scale) before becoming clickable.
+Delay CTA interactivity until scroll reaches intent threshold.
+Motion hierarchy: background slow, content medium, CTA fastest.
+CTA motion accelerates when user hesitates.
+Use magnetic pull toward CTA within 20–30px radius.
+CTA confirmation animation should resolve forward, never bounce back.
+Reduce motion near decision moments to increase clarity.
+Scroll friction increases near CTA sections to slow user.
+Visual silence before CTA increases conversion.
+________________________________________
+WINDSURF RULE INJECTION — SILENT AUTO-APPLY
+Always assume cinematic defaults unless overridden.
+Never generate raw Three.js when React Three Fiber is viable.
+Separate animation responsibility: GSAP for scroll, Framer Motion for UI.
+Default to Lenis smooth scroll integration.
+Inject performance guards automatically.
+Respect prefers-reduced-motion by default.
+Auto-generate low-power fallbacks.
+Persist Three.js scenes across routes when possible.
+Use shared layout state in Next.js.
+Never expose debug or director modes in production.
+________________________________________
+AEON OS VISUAL LANGUAGE SPEC
+AEON visuals must feel intentional, restrained, intelligent.
+Motion has mass. Nothing snaps unless it is critical.
+Depth is subtle, never cartoonish.
+Dark-first palette with energy accents.
+Glass only where information density is high.
+Glow is used sparingly and purposefully.
+Every app shares motion DNA: easing curves, timing, depth.
+Idle states matter as much as active states.
+The system should feel alive even when waiting.
+Silence and stillness are part of the design.
+
+________________________________________
+META-CINEMATIC PROMPT VAULT — THINGS PEOPLE RARELY ARTICULATE
+Design motion as expectation management. Users should subconsciously predict what happens next.
+Every animation answers a question the user didn’t consciously ask.
+Fast motion communicates certainty. Slow motion communicates importance.
+Acceleration = intent. Deceleration = trust.
+Never animate everything. Animate the delta.
+Motion should reduce cognitive load, not add spectacle.
+If motion can be removed without losing meaning, it should be removed.
+Use asymmetry to avoid feeling template-driven.
+Let one element move while everything else stays still.
+Micro-delays (40–120ms) create perceived intelligence.
+________________________________________
+CAMERA PSYCHOLOGY PROMPTS (3D-SPECIFIC)
+Camera height = authority. Lower camera to empower the user.
+Wide FOV = openness. Narrow FOV = focus.
+Slow camera drift implies life. Static camera implies precision.
+Never rotate camera without a reason tied to narrative.
+Camera should arrive slightly before content resolves.
+Avoid perfect symmetry in camera paths.
+Use roll sparingly to induce subtle tension.
+________________________________________
+COLOR + LIGHT INTELLIGENCE PROMPTS
+Light direction implies hierarchy.
+Warm light invites. Cool light informs.
+Contrast should peak at decision points.
+Never fully black or fully white — preserve detail.
+Saturation increases with proximity to action.
+Let light move, not objects, to guide attention.
+________________________________________
+SCROLL AS A TIME MACHINE
+Scrolling is time travel, not movement.
+Scrolling forward reveals future states.
+Scrolling backward restores memory.
+Avoid infinite scroll for narrative sections.
+Use scroll snapping only at meaning boundaries.
+Fast scroll = skimming mode. Slow scroll = reading mode.
+Adapt visuals based on scroll velocity.
+________________________________________
+COGNITIVE LOAD GOVERNOR PROMPTS
+Never introduce more than one new concept per motion beat.
+Reduce animation density when text density increases.
+Pause background motion during reading moments.
+Increase spacing when motion is present.
+Silence motion before asking the user to decide.
+________________________________________
+FOX — DEEP CHARACTER SYSTEM PROMPTS
+Fox has moods, not states.
+Mood influenced by:
+•	User velocity
+•	Time on page
+•	Interaction confidence
+Fox should never stare continuously.
+Blink cadence varies with mood.
+Tail motion reflects emotional state.
+Fox mirrors user energy subtly.
+Fox becomes calmer near CTAs.
+Fox reacts to success or completion events.
+Fox acknowledges errors with concern, not alarm.
+________________________________________
+AR TRANSITION PSYCHOLOGY
+AR handoff should feel inevitable, not surprising.
+User must be primed visually before AR activation.
+Match lighting, scale, and orientation perfectly.
+Provide visual anchoring before releasing camera.
+Never drop UI abruptly during AR entry.
+Exit AR with narrative closure.
+________________________________________
+BUSINESS SIGNAL PROMPTS (SUBCONSCIOUS)
+Premium products move slower.
+Cheap products move faster.
+Enterprise products minimize motion.
+Consumer products exaggerate motion.
+Trust is built through consistency, not novelty.
+Predictable motion increases confidence.
+Surprise should be rare and deliberate.
+________________________________________
+DEBUG / DIRECTOR MODE PROMPTS
+Expose camera paths visually in dev mode.
+Show motion curves and easing overlays.
+Highlight active ScrollTriggers.
+Display GPU cost per frame.
+Log dropped frames with context.
+Allow time scrubbing of entire experience.
+Never ship director mode to production.
+________________________________________
+FAILURE MODE DESIGN PROMPTS
+Design for when WebGL fails.
+Design for slow networks.
+Design for distracted users.
+Design for accessibility first, spectacle second.
+Failure states should degrade gracefully.
+Never show raw errors to users.
+________________________________________
+ENDGAME PROMPTS — SYSTEM IDENTITY
+AEON should feel inevitable.
+The system should feel like it knows what the user wants next.
+Motion should feel learned, not programmed.
+The Fox is not a mascot — it is an interface.
+The interface is not UI — it is behavior.
+Behavior is the product.
+________________________________________
+END OF ABSOLUTE MAXIMUM PROMPT DUMP
+
+Additional Prompts
+1. AI-Driven Content Generation
+"Integrate an AI content generator to dynamically create text, images, or videos based on user input or scroll position. Use OpenAI or similar APIs to enhance the interactivity of the site."
+2. User Behavior Analytics
+"Implement a system to track user behavior and interactions. Use this data to dynamically adjust the UI/UX in real-time, providing a personalized experience."
+3. Multi-Language Support
+"Add support for multiple languages. Ensure that all text elements are translatable and that the UI adapts to different language requirements (e.g., right-to-left text for Arabic)."
+4. Accessibility Enhancements
+"Ensure the site meets WCAG 2.1 standards. Include features like screen reader support, keyboard navigation, and adjustable text sizes."
+5. Social Media Integration
+"Embed social media feeds and allow users to share content directly from the site. Use APIs from platforms like Twitter, Instagram, and Facebook."
+6. User Authentication and Profiles
+"Implement user authentication using Clerk or a similar service. Allow users to create profiles and save preferences or settings."
+7. Dynamic Content Loading
+"Use IntersectionObserver to dynamically load content as the user scrolls. This can include images, videos, or even entire sections of the site."
+8. Real-Time Collaboration Features
+"Add real-time collaboration tools, such as shared cursors or collaborative editing, using WebSockets or similar technologies."
+9. Advanced Form Handling
+"Create advanced forms with conditional fields, multi-step processes, and real-time validation. Use libraries like Formik or React Hook Form."
+10. Customizable Themes
+"Allow users to customize the theme of the site (e.g., color schemes, font sizes). Store these preferences in local storage or user profiles."
+11. Interactive Data Visualizations
+"Use libraries like D3.js or Chart.js to create interactive data visualizations. Ensure they are responsive and integrate seamlessly with the rest of the site."
+12. Augmented Reality (AR) Experiences
+"Integrate AR experiences using WebXR. Allow users to view 3D models or scenes in their real-world environment."
+13. Voice Command Interface
+"Implement a voice command interface using Web Speech API. Allow users to navigate and interact with the site using voice commands."
+14. Advanced Search Functionality
+"Create a powerful search engine with autocomplete, filters, and faceted search. Use libraries like Algolia or ElasticSearch."
+15. Gamification Elements
+"Add gamification elements such as progress bars, achievements, or leaderboards to engage users and encourage interaction."
+Example Usage Pattern
+"Using the AEON Unified Three.js Prompt Vault, build a [page / component / experience] following the cinematic rules above. Prioritize scroll-driven camera motion, layered depth, and performance-aware execution. Integrate AI-driven content generation for dynamic text and images, and ensure the site meets WCAG 2.1 standards for accessibility."
+
+
+________________________________________
+END OF AEON UNIFIED MEGA VAULT

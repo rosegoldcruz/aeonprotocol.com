@@ -694,7 +694,7 @@ function OptimizedCTA() {
 OUTPUT: Psychologically optimized experiences with strategic CTA placement and attention guidance.`,
 };
 
-// Build the enhanced prompt that gets sent to v0
+// Build the enhanced prompt that gets sent to AEON
 export function buildEnhancedPrompt(
   originalPrompt: string,
   agentRole: AgentRole,

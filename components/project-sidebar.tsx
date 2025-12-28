@@ -71,13 +71,13 @@ export function ProjectSidebar({
   return (
     <div className="w-64 bg-muted/30 border-r flex flex-col h-screen">
       {/* Header */}
-      <div className="p-4 border-b flex items-center justify-between">
+      <div className="p-4 border-b flex items-center justify-center">
         <Image
-          src="/tmpocncbr5a.png"
-          alt="Aeon"
-          width={100}
-          height={28}
-          className="h-7 w-auto object-contain"
+          src="/aeon-badge-logo-hexagon.png"
+          alt="Aeon Protocol"
+          width={200}
+          height={200}
+          className="w-full max-w-[180px] h-auto object-contain drop-shadow-[0_0_15px_rgba(255,215,0,0.3)]"
           priority
         />
       </div>
@@ -121,6 +121,7 @@ export function ProjectSidebar({
                 <button
                   onClick={(e) => handleDelete(e, project.id)}
                   className="opacity-0 group-hover:opacity-100 p-1 hover:text-destructive transition-opacity"
+                  title="Delete project"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>

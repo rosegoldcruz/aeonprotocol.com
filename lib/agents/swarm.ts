@@ -1,12 +1,12 @@
 // Agent Swarm Executor - Runs the multi-agent system
 
 import { v0, type ChatDetail } from 'v0-sdk';
-import { 
-  AgentRole, 
-  TaskDecomposition, 
-  AgentContext, 
+import {
+  AgentRole,
+  TaskDecomposition,
+  AgentContext,
   AgentResponse,
-  OrchestratorDecision 
+  OrchestratorDecision
 } from './types';
 import { buildEnhancedPrompt } from './prompts';
 import { orchestrator } from './orchestrator';
@@ -43,7 +43,7 @@ export class AgentSwarm {
    */
   async execute(): Promise<SwarmExecutionResult> {
     this.log('🚀 Initializing Agent Swarm...');
-    
+
     try {
       // Step 1: Orchestrator analyzes and plans
       this.log('🧠 Orchestrator analyzing request...');
@@ -51,7 +51,7 @@ export class AgentSwarm {
       this.log(`📊 Complexity: ${decision.complexity.toUpperCase()}`);
       this.log(`👥 Required Agents: ${decision.requiredAgents.join(', ')}`);
       this.log(`📋 Task Plan: ${decision.taskPlan.length} tasks`);
-      
+
       if (decision.riskFactors.length > 0) {
         this.log(`⚠️ Risk Factors: ${decision.riskFactors.join('; ')}`);
       }
@@ -60,11 +60,11 @@ export class AgentSwarm {
 
       // Step 2: Build the master prompt with full context
       const masterPrompt = this.buildMasterPrompt(decision);
-      
-      // Step 3: Execute via v0 with enhanced prompt
+
+      // Step 3: Execute via AEON Agentic Technology with enhanced prompt
       this.log('🔨 Executing build with enhanced prompt...');
       this.chat = await this.executeWithRetry(masterPrompt);
-      
+
       if (!this.chat) {
         throw new Error('Failed to create chat after all retries');
       }
@@ -101,11 +101,11 @@ export class AgentSwarm {
    */
   async continueChat(chatId: string, message: string): Promise<SwarmExecutionResult> {
     this.log('🔄 Continuing existing chat with swarm intelligence...');
-    
+
     try {
       const decision = orchestrator.analyzeAndPlan(message);
       const enhancedMessage = this.buildIterationPrompt(message, decision);
-      
+
       this.chat = await v0.chats.sendMessage({
         chatId,
         message: enhancedMessage,
@@ -133,7 +133,7 @@ export class AgentSwarm {
    */
   private buildMasterPrompt(decision: OrchestratorDecision): string {
     const packages = orchestrator.getRequiredPackages(decision);
-    
+
     let prompt = `You are an elite development team combined into one AI. You have the expertise of:
 - A Systems Architect who designs scalable component structures
 - A UI/UX Specialist who creates beautiful, responsive interfaces
@@ -255,33 +255,33 @@ DO NOT break existing features. ENHANCE the application.`;
    */
   private async executeWithRetry(prompt: string, maxRetries = 3): Promise<ChatDetail> {
     let lastError: Error | null = null;
-    
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         this.log(`📤 Attempt ${attempt}/${maxRetries}...`);
-        
+
         const chat = await v0.chats.create({
           message: prompt,
         }) as ChatDetail;
-        
+
         if (chat && chat.id) {
           return chat;
         }
-        
-        throw new Error('Invalid response from v0');
-        
+
+        throw new Error('Invalid response from API');
+
       } catch (error) {
         lastError = error as Error;
         this.log(`⚠️ Attempt ${attempt} failed: ${lastError.message}`);
-        
+
         if (attempt < maxRetries) {
           const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-          this.log(`⏳ Waiting ${delay/1000}s before retry...`);
+          this.log(`⏳ Waiting ${delay / 1000}s before retry...`);
           await this.sleep(delay);
         }
       }
     }
-    
+
     throw lastError || new Error('All retry attempts failed');
   }
 

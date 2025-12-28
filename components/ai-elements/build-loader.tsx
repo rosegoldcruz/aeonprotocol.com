@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const buildMessages = [
-  "Initializing AI cores...",
+  "AEON cores initializing...",
   "Analyzing your requirements...",
   "Designing component architecture...",
   "Generating React components...",
-  "Styling with Tailwind CSS...",
+  "Styling with precision...",
   "Optimizing for performance...",
   "Adding responsive layouts...",
   "Polishing the UI...",
@@ -17,11 +17,22 @@ const buildMessages = [
   "Almost there...",
 ];
 
-const logos = [
-  "/aeon_fox.png",
-  "/aeon-fox-robot-badgeark.png",
-  "/aeon-badge-variant-11.jpg",
+// Three epic Aeon characters that pop up
+const AEON_CHARACTERS = [
+  "/tmpppouz1gf.png",
+  "/replicate-prediction-fqr656zbedrmc0crw11t1aeyxr.png",
+  "/replicate-prediction-4szx28y00nrga0ctazcvwkcv5r.png",
 ];
+
+// Shuffle array for random order
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
 interface BuildLoaderProps {
   className?: string;
@@ -29,8 +40,20 @@ interface BuildLoaderProps {
 
 export function BuildLoader({ className }: BuildLoaderProps) {
   const [messageIndex, setMessageIndex] = React.useState(0);
-  const [logoIndex, setLogoIndex] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
+  const [visibleChars, setVisibleChars] = React.useState<number[]>([]);
+
+  // Randomize character order on mount
+  const randomizedChars = React.useMemo(() => shuffleArray(AEON_CHARACTERS), []);
+
+  // Random positions for each character
+  const charPositions = React.useMemo(() =>
+    randomizedChars.map(() => ({
+      x: Math.floor(Math.random() * 100) - 50,
+      y: Math.floor(Math.random() * 40) - 20,
+      rotation: Math.floor(Math.random() * 30) - 15,
+      scale: 0.8 + Math.random() * 0.4,
+    })), [randomizedChars]);
 
   // Cycle through messages
   React.useEffect(() => {
@@ -40,13 +63,14 @@ export function BuildLoader({ className }: BuildLoaderProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Cycle through logos
+  // Pop in characters one by one
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    randomizedChars.forEach((_, index) => {
+      setTimeout(() => {
+        setVisibleChars((prev) => [...prev, index]);
+      }, 800 + index * 600);
+    });
+  }, [randomizedChars]);
 
   // Animate progress (fake but feels good)
   React.useEffect(() => {
@@ -66,18 +90,37 @@ export function BuildLoader({ className }: BuildLoaderProps) {
         className
       )}
     >
-      {/* Logo with glow effect */}
-      <div className="relative mb-8">
-        <div className="absolute inset-0 blur-3xl bg-primary/20 rounded-full scale-150 animate-pulse" />
-        <div className="relative w-32 h-32 animate-float">
-          <Image
-            src={logos[logoIndex]}
-            alt="AEON"
-            fill
-            className="object-contain rounded-2xl transition-all duration-1000 ease-in-out"
-            priority
-          />
-        </div>
+      {/* Three Aeon characters popping up in random positions */}
+      <div className="relative flex items-center justify-center gap-2 mb-4 h-48 w-full max-w-xl">
+        {randomizedChars.map((src, index) => (
+          <div
+            key={src}
+            className={`relative transition-all duration-700 ease-out ${visibleChars.includes(index)
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-50 translate-y-12"
+              }`}
+            style={{
+              transform: visibleChars.includes(index)
+                ? `translateX(${charPositions[index].x}px) translateY(${charPositions[index].y}px) rotate(${charPositions[index].rotation}deg) scale(${charPositions[index].scale})`
+                : undefined,
+              transitionDelay: `${index * 100}ms`,
+            }}
+          >
+            {/* Glow behind character */}
+            <div className={`absolute inset-0 blur-2xl bg-amber-500/30 rounded-full transition-opacity duration-500 ${visibleChars.includes(index) ? "opacity-100" : "opacity-0"
+              }`} style={{ width: "120%", height: "120%", left: "-10%", top: "-10%" }} />
+
+            <Image
+              src={src}
+              alt="AEON Character"
+              width={140}
+              height={180}
+              className="relative z-10 w-24 md:w-32 lg:w-36 h-auto object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+              priority
+              unoptimized
+            />
+          </div>
+        ))}
       </div>
 
       {/* Animated rings */}
@@ -86,7 +129,7 @@ export function BuildLoader({ className }: BuildLoaderProps) {
         <div className="absolute inset-4 border-2 border-primary/30 rounded-full animate-spin-slow" />
         <div className="absolute inset-8 border-2 border-primary/40 rounded-full animate-reverse-spin" />
         <div className="absolute inset-12 border-2 border-primary/50 rounded-full animate-spin-slow" />
-        
+
         {/* Center content */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">

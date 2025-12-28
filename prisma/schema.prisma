@@ -23,6 +23,8 @@ model Project {
   messages  Message[]
 
   @@id([tenantId, id])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, userId])
   @@map("projects")
 }
 
@@ -37,5 +39,6 @@ model Message {
   project   Project  @relation(fields: [tenantId, projectId], references: [tenantId, id], onDelete: Cascade)
 
   @@id([tenantId, id])
+  @@index([tenantId, projectId, createdAt])
   @@map("messages")
 }

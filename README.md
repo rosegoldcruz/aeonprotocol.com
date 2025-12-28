@@ -5,41 +5,47 @@ AI-powered website builder. Describe what you want, watch it come to life.
 ## Quick Start
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
-2. Set up your environment:
+1. Set up your environment:
+
 ```bash
 cp .env.example .env.local
 ```
 
-3. Get your v0 API key from [v0.dev/chat/settings/keys](https://v0.dev/chat/settings/keys) and add it to `.env.local`
+1. Add your API key to `.env.local`
 
-4. Run the development server:
+2. Run the development server:
+
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000)
+1. Open [http://localhost:3000](http://localhost:3000)
 
 ## How It Works
 
 1. **Describe your app** - Type what you want to build in plain English
-2. **AI generates it** - v0 creates a fully functional React component
+2. **AEON generates it** - AI creates a fully functional React component
 3. **Preview instantly** - See your app live in the preview panel
 4. **Iterate** - Keep chatting to refine and improve your app
 
 ## Tech Stack
 
 - **Next.js 15** - React framework
-- **v0 SDK** - AI code generation
+- **AEON Agentic Technology** - AI code generation
 - **Tailwind CSS** - Styling
 - **shadcn/ui** - UI components
+- **Prisma** - Database ORM
+- **PostgreSQL** - Production database
 
 ## Examples
 
 Try these prompts:
+
 - "Create a landing page for a coffee shop"
 - "Build a todo app with dark mode"
 - "Make a pricing page with 3 tiers"
