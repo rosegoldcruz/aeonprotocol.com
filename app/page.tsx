@@ -105,8 +105,14 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to create app");
+        const text = await response.text();
+        try {
+          const error = JSON.parse(text);
+          throw new Error(error.error || "Failed to create app");
+        } catch (e) {
+          // If response is not JSON, use the text directly
+          throw new Error(text || "Failed to create app");
+        }
       }
 
       const result = await response.json();
