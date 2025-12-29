@@ -3,7 +3,7 @@
 // The Brain of the Constellation - Scores, Routes, Learns, Evolves
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { randomUUID } from 'crypto';
+import { randomUUID, createHash } from 'crypto';
 import {
   ConstellationAgentRole,
   SovereignAgent,
@@ -47,6 +47,8 @@ import {
 // NEXUS CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { v0 } from 'v0-sdk';
+
 const DEFAULT_THRESHOLDS: TelemetryThresholds = {
   maxLatencyMs: 5000,
   maxErrorRate: 0.1,
@@ -66,6 +68,32 @@ const DEFAULT_RL_CONFIG: RLConfig = {
   updateFrequency: 10,
 };
 
+interface CompletionOptions {
+  timeout: number;
+  maxTokens: number;
+}
+
+interface LLMProvider {
+  complete(prompt: string, options: CompletionOptions): Promise<string>;
+}
+
+class V0Provider implements LLMProvider {
+  async complete(prompt: string, options: CompletionOptions): Promise<string> {
+    const result = await v0.chats.create({
+      message: prompt,
+      modelConfiguration: {
+        modelId: 'v0-1.5-sm',
+        imageGenerations: false,
+        thinking: false,
+      },
+    });
+    // v0 SDK returns ChatDetail with demo property containing the generated content
+    return typeof result === 'object' && 'demo' in result
+      ? String((result as any).demo || '')
+      : String(result);
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // NEXUS META-CONTROLLER
 // ─────────────────────────────────────────────────────────────────────────────
@@ -84,10 +112,12 @@ export class NexusController {
   private telemetryInterval: NodeJS.Timeout | null = null;
   private failoverHistory: FailoverCircuit[];
   private postMortems: PostMortem[];
+  private llmProvider: LLMProvider;
   
   constructor(
     thresholds: TelemetryThresholds = DEFAULT_THRESHOLDS,
-    rlConfig: RLConfig = DEFAULT_RL_CONFIG
+    rlConfig: RLConfig = DEFAULT_RL_CONFIG,
+    llmProvider: LLMProvider = new V0Provider()
   ) {
     this.agents = new Map();
     this.taskQueue = [];
@@ -101,6 +131,7 @@ export class NexusController {
     this.qTable = new Map();
     this.failoverHistory = [];
     this.postMortems = [];
+    this.llmProvider = llmProvider;
     
     this.initializeConstellation();
   }
@@ -555,9 +586,15 @@ Execute NOW. No excuses. No simplification.`;
   }
 
   private async callLLM(role: ConstellationAgentRole, prompt: string): Promise<string> {
-    // Placeholder for actual LLM integration
-    // In production, this would call v0, OpenAI, Anthropic, etc.
-    return `[${role} Output]\n\n// Implementation generated for:\n${prompt.slice(0, 200)}...`;
+    try {
+      return await this.llmProvider.complete(prompt, {
+        timeout: 30000,
+        maxTokens: 4000,
+      });
+    } catch (error) {
+      console.error(`LLM call failed for ${role}:`, error);
+      throw error;
+    }
   }
 
   private extractArtifacts(output: string): TaskResult['artifacts'] {
@@ -651,7 +688,7 @@ Execute NOW. No excuses. No simplification.`;
   // TELEMETRY & HEALTH MONITORING
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public startTelemetryLoop(intervalMs: number = 50): void {
+  public startTelemetryLoop(intervalMs: number = 1000): void {
     this.telemetryInterval = setInterval(() => {
       for (const [role, agent] of this.agents) {
         const telemetry = this.collectTelemetry(agent);
@@ -942,14 +979,9 @@ Execute NOW. No excuses. No simplification.`;
     previousHash: string
   ): string {
     const data = JSON.stringify({ type, agentId, payload, previousHash });
-    // Simple hash for demo - use crypto.createHash('sha256') in production
-    let hash = 0;
-    for (let i = 0; i < data.length; i++) {
-      const char = data.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-    }
-    return Math.abs(hash).toString(16).padStart(16, '0');
+    const hash = createHash('sha256');
+    hash.update(data);
+    return hash.digest('hex');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

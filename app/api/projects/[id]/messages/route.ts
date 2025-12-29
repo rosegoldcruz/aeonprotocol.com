@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { randomUUID } from "crypto";
+import { getTenantId } from "@/lib/auth";
+import { isValidUUID } from "@/lib/utils";
+import { z } from "zod";
+
+const createMessageSchema = z.object({
+  role: z.enum(["user", "assistant", "system"]),
+  content: z.string().min(1).max(50000),
+});
 
 // POST /api/projects/[id]/messages - Add a message to a project
 export async function POST(
@@ -9,8 +17,28 @@ export async function POST(
 ) {
   try {
     const { id: projectId } = await params;
-    const tenantId = "00000000-0000-0000-0000-000000000000";
-    const { role, content } = await request.json();
+    const tenantId = await getTenantId();
+
+    // Validate UUID
+    if (!isValidUUID(projectId)) {
+      return NextResponse.json(
+        { error: "Invalid project ID" },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Validate input
+    const validation = createMessageSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validation.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { role, content } = validation.data;
 
     const message = await prisma.message.create({
       data: {
@@ -39,7 +67,15 @@ export async function GET(
 ) {
   try {
     const { id: projectId } = await params;
-    const tenantId = "00000000-0000-0000-0000-000000000000";
+    const tenantId = await getTenantId();
+
+    // Validate UUID
+    if (!isValidUUID(projectId)) {
+      return NextResponse.json(
+        { error: "Invalid project ID" },
+        { status: 400 }
+      );
+    }
 
     const messages = await prisma.message.findMany({
       where: { tenantId, projectId },

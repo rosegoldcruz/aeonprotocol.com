@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { randomUUID } from "crypto";
+import { getTenantId } from "@/lib/auth";
+import { z } from "zod";
 
-// Default tenant ID for now (will be user's tenant after auth)
-const DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000000";
+const createProjectSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+});
 
 // GET /api/projects - List all projects for the user
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getTenantId();
+    
     const projects = await prisma.project.findMany({
-      where: { tenantId: DEFAULT_TENANT_ID },
+      where: { tenantId },
       orderBy: { createdAt: "desc" },
       include: {
         messages: {
@@ -32,11 +37,23 @@ export async function GET() {
 // POST /api/projects - Create a new project
 export async function POST(request: NextRequest) {
   try {
-    const { name } = await request.json();
+    const tenantId = await getTenantId();
+    const body = await request.json();
+    
+    // Validate input
+    const validation = createProjectSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validation.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const { name } = validation.data;
 
     const project = await prisma.project.create({
       data: {
-        tenantId: DEFAULT_TENANT_ID,
+        tenantId,
         id: randomUUID(),
         name: name || "New Project",
         userId: "anonymous", // Will be real user after auth

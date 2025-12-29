@@ -108,7 +108,9 @@ export default function Home() {
         const text = await response.text();
         try {
           const error = JSON.parse(text);
-          throw new Error(error.error || "Failed to create app");
+          // Include details if available
+          const errorMessage = JSON.stringify(error, null, 2);
+          throw new Error(errorMessage);
         } catch (e) {
           // If response is not JSON, use the text directly
           throw new Error(text || "Failed to create app");
