@@ -8,7 +8,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-src 'self' https://*.v0.dev https://v0.dev;",
+            value: "frame-src 'self' https://*.v0.dev https://v0.dev https://vercel.live/;",
           },
         ],
       },

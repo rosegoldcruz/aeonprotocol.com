@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = chatRequestSchema.parse(body);
     const { message, chatId, projectId } = validated;
-    
+
     // Security: Check if V0_API_KEY is configured
     if (!process.env.V0_API_KEY) {
       return NextResponse.json(
@@ -27,16 +27,16 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-    
+
     let project;
     let swarmResult;
     const tenantId = await getTenantId();
-    
+
     // Security: Log only non-sensitive information
     if (process.env.NODE_ENV === 'development') {
       console.log(`[Chat API] Processing request - chatId: ${chatId}, projectId: ${projectId}`);
     }
-    
+
     // Validate UUIDs if provided
     if (chatId && !isValidUUID(chatId)) {
       return NextResponse.json({ error: "Invalid chat ID" }, { status: 400 });
@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
     if (projectId && !isValidUUID(projectId)) {
       return NextResponse.json({ error: "Invalid project ID" }, { status: 400 });
     }
-    
+
     // Analyze the prompt complexity
     const analysis = orchestrator.analyzeAndPlan(message);
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`[Chat API] Orchestrator Analysis:`, {
         complexity: analysis.complexity,
@@ -56,15 +56,15 @@ export async function POST(request: NextRequest) {
         risks: analysis.riskFactors,
       });
     }
-    
+
     // Run swarm
     const swarm = createSwarm(message);
     swarmResult = await swarm.execute();
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log(`[Chat API] Swarm execution log:`, swarmResult.executionLog);
     }
-    
+
     if (projectId) {
       // Save user message
       await prisma.message.create({
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
           content: message,
         },
       });
-      
+
       // Update project with latest demo URL
       project = await prisma.project.update({
         where: {
@@ -87,12 +87,12 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date(),
         },
       });
-      
+
       // Save assistant message with execution details
       const assistantMessage = swarmResult.success
         ? `✨ Your app has been updated!\n\n📊 Analysis: ${analysis.complexity} complexity\n👥 Agents Used: ${analysis.requiredAgents.join(', ')}\n\nCheck out the preview to see your changes.`
         : `⚠️ Update completed with some issues. Check out the preview.`;
-      
+
       await prisma.message.create({
         data: {
           tenantId,
@@ -102,11 +102,11 @@ export async function POST(request: NextRequest) {
           content: assistantMessage,
         },
       });
-      
+
     } else {
       // CREATE NEW CHAT - Start fresh app with full swarm power
       const newProjectId = randomUUID();
-      
+
       project = await prisma.project.create({
         data: {
           tenantId,
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
           demoUrl: swarmResult.demoUrl,
         },
       });
-      
+
       await prisma.message.createMany({
         data: [
           {
@@ -131,19 +131,22 @@ export async function POST(request: NextRequest) {
             id: randomUUID(),
             projectId: newProjectId,
             role: "assistant",
-            content: swarmResult.success 
-              ? "New project created successfully!" 
+            content: swarmResult.success
+              ? "New project created successfully!"
               : "New project created with issues",
           },
         ],
       });
     }
-    
+
     return NextResponse.json({ project, swarmResult });
   } catch (error) {
     console.error("[Chat API] Error:", error);
+    if (error instanceof Error) {
+      console.error("[Chat API] Stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Failed to process request" },
+      { error: "Failed to process request", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

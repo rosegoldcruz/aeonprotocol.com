@@ -12,7 +12,7 @@ const createProjectSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const tenantId = await getTenantId();
-    
+
     const projects = await prisma.project.findMany({
       where: { tenantId },
       orderBy: { createdAt: "desc" },
@@ -27,8 +27,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(projects);
   } catch (error) {
     console.error("Error fetching projects:", error);
+    if (error instanceof Error) {
+      console.error("Stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Failed to fetch projects" },
+      { error: "Failed to fetch projects", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
   try {
     const tenantId = await getTenantId();
     const body = await request.json();
-    
+
     // Validate input
     const validation = createProjectSchema.safeParse(body);
     if (!validation.success) {
@@ -63,8 +66,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(project);
   } catch (error) {
     console.error("Error creating project:", error);
+    if (error instanceof Error) {
+      console.error("Stack:", error.stack);
+    }
     return NextResponse.json(
-      { error: "Failed to create project" },
+      { error: "Failed to create project", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
