@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  api:
+    build:
+      context: ../backend-api
+    env_file:
+      - ../backend-api/.env
+    command: gunicorn -c gunicorn.conf.py aeon.main:app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  workers:
+    build:
+      context: ../backend-workers
+    env_file:
+      - ../backend-workers/.env
+    command: uv run celery -A aeon_workers.app.app worker -l info --queues=media,crm,email,maintenance
+    depends_on:
+      - redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
