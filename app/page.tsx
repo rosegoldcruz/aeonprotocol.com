@@ -19,10 +19,12 @@ import {
   WebPreviewUrl,
   WebPreviewBody,
 } from "@/components/ai-elements/web-preview";
+import { AgentIDE } from "@/components/ai-elements/agent-ide";
 import { Loader } from "@/components/ai-elements/loader";
 import { Suggestions, Suggestion } from "@/components/ai-elements/suggestion";
 import { ProjectSidebar } from "@/components/project-sidebar";
 import { LoadingScreen } from "@/components/loading-screen";
+import { Button } from "@/components/ui/button";
 
 interface Project {
   tenantId: string;
@@ -38,12 +40,31 @@ interface ChatMessage {
   content: string;
 }
 
+const DEFAULT_AGENT_CODE = `// AEON Agent IDE Workspace\n// Use this editor to draft agent-generated code and iterations.\n\nexport function agentTask() {\n  return {\n    status: "ready",\n    message: "Monaco IDE online for coding agents.",\n  };\n}`;
+
+const REQUESTY_MODELS = [
+  { group: "OpenAI", models: ["gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano", "gpt-4o", "gpt-4o-mini", "gpt-4o-nano", "gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5-pro", "gpt-5-codex", "gpt-5.1", "o4-mini", "o4-mini-deep-research", "o3-mini", "o3-pro", "o3-deep-research"], },
+  { group: "Anthropic", models: ["claude-3-5-haiku", "claude-3-7-sonnet", "claude-3-haiku", "claude-haiku-4-5", "claude-opus-4", "claude-opus-4-1", "claude-opus-4-5", "claude-sonnet-4", "claude-sonnet-4-5"], },
+  { group: "Google", models: ["gemini-2.0-flash-001", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro", "gemini-3-flash", "gemini-3-pro"], },
+  { group: "DeepSeek", models: ["deepseek-r1", "deepseek-r1-distill-llama-70b", "deepseek-v3", "deepseek-v3.1"], },
+  { group: "Mistral", models: ["codestral", "devstral", "devstral-medium", "devstral-small", "mistral-large", "mistral-medium", "mistral-small", "open-mistral-7b", "pixtral-large"], },
+  { group: "Meta", models: ["llama-3.2-90b-vision-instruct", "llama-3.3-70b-instruct", "llama-3.1-8b-instruct-turbo", "meta-llama-3.1-70b-instruct", "meta-llama-3.1-405b-instruct"], },
+  { group: "Qwen", models: ["qwen2.5-72b-instruct", "qwen2.5-coder-32b-instruct", "qwen2.5-72b-a22b", "qwen3-32b", "qwen3-coder-480b-a15b-instruct"], },
+  { group: "Other", models: ["glm-4.5", "glm-4.5-air", "phi-4"], },
+];
+
 export default function Home() {
   const [isAppReady, setIsAppReady] = useState(false);
   const [message, setMessage] = useState("");
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [activePanel, setActivePanel] = useState<"preview" | "ide">("preview");
+  const [agentCode, setAgentCode] = useState(DEFAULT_AGENT_CODE);
+  const [provider, setProvider] = useState<"v0" | "openai" | "deepseek" | "requesty">("v0");
+  const [model, setModel] = useState("v0-1.5-sm");
+  const [isCustomModel, setIsCustomModel] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Load messages when project changes
   useEffect(() => {
@@ -83,24 +104,25 @@ export default function Home() {
   const handleSendMessage = async (promptMessage: PromptInputMessage) => {
     const hasText = Boolean(promptMessage.text);
 
-    if (!hasText || isLoading) return;
+    if (!hasText || isLoading || isGenerating) return;
 
     const userMessage = promptMessage.text?.trim() || "";
     setMessage("");
     setIsLoading(true);
+    setIsGenerating(true);
 
     setChatHistory((prev) => [...prev, { type: "user", content: userMessage }]);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/generate-v0", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage,
-          chatId: currentProject?.chatId,
-          projectId: currentProject?.id,
+          prompt: userMessage,
+          provider,
+          model,
         }),
       });
 
@@ -118,26 +140,20 @@ export default function Home() {
       }
 
       const result = await response.json();
-
-      // Update current project with the new data
-      setCurrentProject({
-        tenantId: "00000000-0000-0000-0000-000000000000",
-        id: result.projectId,
-        name: currentProject?.name || userMessage.slice(0, 50),
-        chatId: result.id,
-        demoUrl: result.demo,
-        createdAt: currentProject?.createdAt || new Date().toISOString(),
-      });
+      const generatedCode = result.code || "// No code generated";
+      setAgentCode(generatedCode);
+      setActivePanel("ide");
 
       setChatHistory((prev) => [
         ...prev,
         {
           type: "assistant",
-          content: "✨ Your app is ready! Check the preview panel on the right.",
+          content: `✨ Code generated via ${provider}. Check the Agent IDE and Preview panel.`,
         },
       ]);
     } catch (error) {
       console.error("Error:", error);
+      setAgentCode("// Error generating code");
       setChatHistory((prev) => [
         ...prev,
         {
@@ -150,6 +166,7 @@ export default function Home() {
       ]);
     } finally {
       setIsLoading(false);
+      setIsGenerating(false);
     }
   };
 
@@ -242,6 +259,72 @@ export default function Home() {
                 />
               </Suggestions>
             )}
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <label className="text-xs text-muted-foreground">Provider</label>
+              <select
+                value={provider}
+                onChange={(e) => {
+                  const nextProvider = e.target.value as typeof provider;
+                  setProvider(nextProvider);
+                  setIsCustomModel(false);
+                  if (nextProvider === "v0") setModel("v0-1.5-sm");
+                  if (nextProvider === "openai") setModel("gpt-4o-mini");
+                  if (nextProvider === "deepseek") setModel("deepseek-chat");
+                  if (nextProvider === "requesty") setModel(REQUESTY_MODELS[0]?.models[0] || "");
+                }}
+                className="h-8 rounded-md border bg-background px-2 text-xs"
+              >
+                <option value="v0">v0</option>
+                <option value="openai">OpenAI</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="requesty">Requesty</option>
+              </select>
+              <label className="text-xs text-muted-foreground">Model</label>
+              {provider === "requesty" ? (
+                <div className="flex w-full flex-wrap items-center gap-2">
+                  <select
+                    value={isCustomModel ? "__custom" : model}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "__custom") {
+                        setIsCustomModel(true);
+                        setModel("");
+                      } else {
+                        setIsCustomModel(false);
+                        setModel(value);
+                      }
+                    }}
+                    className="h-8 min-w-[220px] flex-1 rounded-md border bg-background px-2 text-xs"
+                  >
+                    {REQUESTY_MODELS.map((group) => (
+                      <optgroup key={group.group} label={group.group}>
+                        {group.models.map((m) => (
+                          <option key={m} value={m}>
+                            {m}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                    <option value="__custom">Custom...</option>
+                  </select>
+                  {isCustomModel && (
+                    <input
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                      placeholder="Enter Requesty model id"
+                      className="h-8 min-w-[220px] flex-1 rounded-md border bg-background px-2 text-xs"
+                    />
+                  )}
+                </div>
+              ) : (
+                <input
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  placeholder="model id"
+                  className="h-8 min-w-[180px] flex-1 rounded-md border bg-background px-2 text-xs"
+                />
+              )}
+            </div>
             <PromptInput
               onSubmit={handleSendMessage}
               isLoading={isLoading}
@@ -266,18 +349,51 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Preview Panel */}
+        {/* Preview / IDE Panel */}
         <div className="w-1/2 flex flex-col bg-muted/30">
-          <WebPreview isLoading={isLoading}>
-            <WebPreviewNavigation>
-              <WebPreviewUrl
-                readOnly
-                placeholder="Your app preview URL..."
-                value={currentProject?.demoUrl || ""}
+          {activePanel === "preview" ? (
+            <WebPreview isLoading={isLoading}>
+              <WebPreviewNavigation>
+                <div className="flex items-center gap-1 mr-2">
+                  <Button
+                    variant={activePanel === "preview" ? "secondary" : "ghost"}
+                    size="sm"
+                    onClick={() => setActivePanel("preview")}
+                  >
+                    Preview
+                  </Button>
+                  <Button
+                    variant={activePanel === "ide" ? "secondary" : "ghost"}
+                    size="sm"
+                    onClick={() => setActivePanel("ide")}
+                  >
+                    Agent IDE
+                  </Button>
+                </div>
+                <WebPreviewUrl
+                  readOnly
+                  placeholder="Live preview"
+                  value={agentCode ? "v0:local-preview" : currentProject?.demoUrl || ""}
+                />
+              </WebPreviewNavigation>
+              <WebPreviewBody
+                src={currentProject?.demoUrl || undefined}
+                srcDoc={
+                  agentCode
+                    ? `<!doctype html><html><head><meta charset="utf-8" /><script src="https://cdn.tailwindcss.com"></script></head><body>${agentCode}</body></html>`
+                    : undefined
+                }
               />
-            </WebPreviewNavigation>
-            <WebPreviewBody src={currentProject?.demoUrl || undefined} />
-          </WebPreview>
+            </WebPreview>
+          ) : (
+            <AgentIDE
+              code={agentCode}
+              onChange={setAgentCode}
+              activePanel={activePanel}
+              onSwitchToPreview={() => setActivePanel("preview")}
+              onSwitchToIDE={() => setActivePanel("ide")}
+            />
+          )}
         </div>
       </div>
     </>

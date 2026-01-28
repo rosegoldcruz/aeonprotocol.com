@@ -118,9 +118,11 @@ export function WebPreviewUrl({ className, value, ...props }: WebPreviewUrlProps
   );
 }
 
-interface WebPreviewBodyProps extends React.IframeHTMLAttributes<HTMLIFrameElement> { }
+interface WebPreviewBodyProps extends React.IframeHTMLAttributes<HTMLIFrameElement> {
+  srcDoc?: string;
+}
 
-export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps) {
+export function WebPreviewBody({ className, src, srcDoc, ...props }: WebPreviewBodyProps) {
   const { url, refreshKey, isLoading } = useWebPreview();
   const iframeSrc = src || url;
 
@@ -129,7 +131,7 @@ export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps
     return <BuildLoader />;
   }
 
-  if (!iframeSrc) {
+  if (!iframeSrc && !srcDoc) {
     return (
       <div className="flex-1 flex items-center justify-center bg-muted/30">
         <div className="text-center text-muted-foreground">
@@ -138,6 +140,18 @@ export function WebPreviewBody({ className, src, ...props }: WebPreviewBodyProps
           <p className="text-sm">Describe what you want to build and watch it come to life</p>
         </div>
       </div>
+    );
+  }
+
+  if (srcDoc) {
+    return (
+      <iframe
+        key={refreshKey}
+        className={cn("flex-1 size-full border-none", className)}
+        srcDoc={srcDoc}
+        sandbox="allow-scripts"
+        {...props}
+      />
     );
   }
 
