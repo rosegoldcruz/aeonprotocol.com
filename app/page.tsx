@@ -65,6 +65,7 @@ export default function Home() {
   const [model, setModel] = useState("v0-1.5-sm");
   const [isCustomModel, setIsCustomModel] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const isPreviewPanel = activePanel === "preview";
 
   // Load messages when project changes
   useEffect(() => {
@@ -351,7 +352,7 @@ export default function Home() {
 
         {/* Preview / IDE Panel */}
         <div className="w-1/2 flex flex-col bg-muted/30">
-          {activePanel === "preview" ? (
+          {isPreviewPanel ? (
             <WebPreview isLoading={isLoading}>
               <WebPreviewNavigation>
                 <div className="flex items-center gap-1 mr-2">
@@ -363,7 +364,7 @@ export default function Home() {
                     Preview
                   </Button>
                   <Button
-                    variant={activePanel === "ide" ? "secondary" : "ghost"}
+                    variant="ghost"
                     size="sm"
                     onClick={() => setActivePanel("ide")}
                   >

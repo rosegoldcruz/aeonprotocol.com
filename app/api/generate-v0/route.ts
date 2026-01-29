@@ -74,9 +74,12 @@ export async function POST(req: Request) {
         );
       }
 
+      if (!process.env.V0_API_KEY) {
+        process.env.V0_API_KEY = apiKey;
+      }
+
       const result = await v0.chats.create({
         message: `SYSTEM: You are an expert UI/code generator using shadcn/ui, Tailwind, and Next.js. Output clean, production-ready code.\n\nUSER: ${prompt}`,
-        apiKey,
         modelConfiguration: {
           modelId: isV0ModelId(model) ? model : "v0-1.5-sm",
           imageGenerations: false,
