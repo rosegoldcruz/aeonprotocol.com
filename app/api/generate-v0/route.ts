@@ -2,11 +2,24 @@ import { NextResponse } from "next/server";
 import { v0 } from "v0-sdk";
 
 type Provider = "v0" | "openai" | "deepseek" | "requesty";
+type V0ModelId = "v0-1.5-sm" | "v0-1.5-md" | "v0-1.5-lg" | "v0-gpt-5" | "v0-opus-4.5";
 
 interface GeneratePayload {
   prompt?: string;
   provider?: Provider;
   model?: string;
+}
+
+const V0_MODEL_IDS: V0ModelId[] = [
+  "v0-1.5-sm",
+  "v0-1.5-md",
+  "v0-1.5-lg",
+  "v0-gpt-5",
+  "v0-opus-4.5",
+];
+
+function isV0ModelId(value: unknown): value is V0ModelId {
+  return typeof value === "string" && V0_MODEL_IDS.includes(value as V0ModelId);
 }
 
 async function callOpenAICompatible(params: {
@@ -65,7 +78,7 @@ export async function POST(req: Request) {
         message: `SYSTEM: You are an expert UI/code generator using shadcn/ui, Tailwind, and Next.js. Output clean, production-ready code.\n\nUSER: ${prompt}`,
         apiKey,
         modelConfiguration: {
-          modelId: model || "v0-1.5-sm",
+          modelId: isV0ModelId(model) ? model : "v0-1.5-sm",
           imageGenerations: false,
           thinking: false,
         },
