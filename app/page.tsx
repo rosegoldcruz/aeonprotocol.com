@@ -117,7 +117,7 @@ export default function Home() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to create project");
+        throw new Error(error.details || error.error || "Failed to create project");
       }
 
       const newProject = await response.json();
