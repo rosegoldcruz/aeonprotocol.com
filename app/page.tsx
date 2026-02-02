@@ -68,7 +68,7 @@ export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [isCreatingProject, setIsCreatingProject] = useState(false);
-  const projectsRefreshRef = useRef<() => void>(() => {});
+  const projectsRefreshRef = useRef<{ refresh: () => void } | null>(null);
   const isPreviewPanel = activePanel === "preview";
 
   // Load messages when project changes
@@ -126,9 +126,7 @@ export default function Home() {
       setMessage("");
       
       // Refresh the projects list in sidebar
-      if (projectsRefreshRef.current) {
-        projectsRefreshRef.current();
-      }
+      projectsRefreshRef.current?.refresh();
     } catch (error) {
       console.error("Error creating project:", error);
       throw error;
@@ -220,9 +218,6 @@ export default function Home() {
           currentProjectId={currentProject?.id || null}
           onSelectProject={handleSelectProject}
           onNewProject={handleNewProject}
-          onRefresh={(refreshFn) => {
-            projectsRefreshRef.current = refreshFn;
-          }}
         />
 
         <NewProjectModal

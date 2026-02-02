@@ -18,13 +18,12 @@ interface ProjectSidebarProps {
   currentProjectId: string | null;
   onSelectProject: (project: Project) => void;
   onNewProject: () => void;
-  onRefresh?: (refreshFn: () => void) => void;
 }
 
 export const ProjectSidebar = forwardRef<
   { refresh: () => void },
   ProjectSidebarProps
->(({ currentProjectId, onSelectProject, onNewProject, onRefresh }, ref) => {
+>(({ currentProjectId, onSelectProject, onNewProject }, ref) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,10 +47,7 @@ export const ProjectSidebar = forwardRef<
 
   useEffect(() => {
     fetchProjects();
-    if (onRefresh) {
-      onRefresh(fetchProjects);
-    }
-  }, [onRefresh]);
+  }, []);
 
   // Refresh projects when a new one is created
   useEffect(() => {
