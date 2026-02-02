@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import Image from "next/image";
 import { Plus, Trash2, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,13 +18,13 @@ interface ProjectSidebarProps {
   currentProjectId: string | null;
   onSelectProject: (project: Project) => void;
   onNewProject: () => void;
+  onRefresh?: (refreshFn: () => void) => void;
 }
 
-export function ProjectSidebar({
-  currentProjectId,
-  onSelectProject,
-  onNewProject,
-}: ProjectSidebarProps) {
+export const ProjectSidebar = forwardRef<
+  { refresh: () => void },
+  ProjectSidebarProps
+>(({ currentProjectId, onSelectProject, onNewProject, onRefresh }, ref) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,9 +42,16 @@ export function ProjectSidebar({
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    refresh: fetchProjects,
+  }));
+
   useEffect(() => {
     fetchProjects();
-  }, []);
+    if (onRefresh) {
+      onRefresh(fetchProjects);
+    }
+  }, [onRefresh]);
 
   // Refresh projects when a new one is created
   useEffect(() => {
@@ -139,4 +146,4 @@ export function ProjectSidebar({
       </div>
     </div>
   );
-}
+});

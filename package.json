@@ -27,6 +27,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "v0-sdk": "^0.15.3",
+    "vercel": "^50.9.6",
     "zod": "^4.2.1"
   },
   "devDependencies": {

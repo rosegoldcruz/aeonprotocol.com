@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
   PromptInput,
@@ -24,6 +24,7 @@ import { Loader } from "@/components/ai-elements/loader";
 import { Suggestions, Suggestion } from "@/components/ai-elements/suggestion";
 import { ProjectSidebar } from "@/components/project-sidebar";
 import { LoadingScreen } from "@/components/loading-screen";
+import { NewProjectModal } from "@/components/new-project-modal";
 import { Button } from "@/components/ui/button";
 
 interface Project {
@@ -65,6 +66,9 @@ export default function Home() {
   const [model, setModel] = useState("v0-1.5-sm");
   const [isCustomModel, setIsCustomModel] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
+  const [isCreatingProject, setIsCreatingProject] = useState(false);
+  const projectsRefreshRef = useRef<() => void>(() => {});
   const isPreviewPanel = activePanel === "preview";
 
   // Load messages when project changes
@@ -97,9 +101,40 @@ export default function Home() {
   };
 
   const handleNewProject = () => {
-    setCurrentProject(null);
-    setChatHistory([]);
-    setMessage("");
+    setIsNewProjectModalOpen(true);
+  };
+
+  const handleCreateProject = async (projectName: string) => {
+    try {
+      setIsCreatingProject(true);
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: projectName }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create project");
+      }
+
+      const newProject = await response.json();
+      setCurrentProject(newProject);
+      setChatHistory([]);
+      setMessage("");
+      
+      // Refresh the projects list in sidebar
+      if (projectsRefreshRef.current) {
+        projectsRefreshRef.current();
+      }
+    } catch (error) {
+      console.error("Error creating project:", error);
+      throw error;
+    } finally {
+      setIsCreatingProject(false);
+    }
   };
 
   const handleSendMessage = async (promptMessage: PromptInputMessage) => {
@@ -181,9 +216,20 @@ export default function Home() {
       <div className={`h-screen flex transition-opacity duration-500 ${isAppReady ? 'opacity-100' : 'opacity-0'}`}>
         {/* Project Sidebar */}
         <ProjectSidebar
+          ref={projectsRefreshRef}
           currentProjectId={currentProject?.id || null}
           onSelectProject={handleSelectProject}
           onNewProject={handleNewProject}
+          onRefresh={(refreshFn) => {
+            projectsRefreshRef.current = refreshFn;
+          }}
+        />
+
+        <NewProjectModal
+          isOpen={isNewProjectModalOpen}
+          onClose={() => setIsNewProjectModalOpen(false)}
+          onCreate={handleCreateProject}
+          isLoading={isCreatingProject}
         />
 
         {/* Chat Panel */}
