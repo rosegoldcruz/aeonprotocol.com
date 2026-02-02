@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { v0 } from "v0-sdk";
 
 type Provider = "v0" | "openai" | "deepseek" | "requesty";
 type V0ModelId = "v0-1.5-sm" | "v0-1.5-md" | "v0-1.5-lg" | "v0-gpt-5" | "v0-opus-4.5";
@@ -50,7 +49,9 @@ async function callOpenAICompatible(params: {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Provider request failed");
+    throw new Error(
+      `Provider request failed (${response.status}): ${errorText || ""}`.trim()
+    );
   }
 
   const data = await response.json();
@@ -66,6 +67,7 @@ export async function POST(req: Request) {
 
   try {
     if (provider === "v0") {
+      const { v0 } = await import("v0-sdk");
       const apiKey = process.env.V0_DEV_API_KEY || process.env.V0_API_KEY;
       if (!apiKey) {
         return NextResponse.json(
@@ -157,6 +159,10 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+    const details = error instanceof Error ? error.message : String(error);
+    return NextResponse.json(
+      { error: "Generation failed", details },
+      { status: 500 }
+    );
   }
 }
